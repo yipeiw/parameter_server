@@ -17,11 +17,17 @@ void DarlinWorker::preprocessData(const MessagePtr& msg) {
     active_set_[grp].resize(n, true);
     delta_[grp].resize(n, conf_.darling().delta_init_value());
   }
+  //randomround_filter_.set_bit(32);
 }
 
 void DarlinWorker::computeGradient(const MessagePtr& msg) {
   int time = msg->task.time() * k_time_ratio_;
   auto cmd = LinearMethod::get(msg);
+
+  if (cmd.has_roundfilter_bit_num()) {
+    randomround_filter_.set_bit(cmd.roundfilter_bit_num());
+  }
+
   if (cmd.reset_kkt_filter()) {
     for (int grp : fea_grp_) active_set_[grp].fill(true);
   }
@@ -151,7 +157,9 @@ void DarlinWorker::computeGradient(
         // u += tau * (1-tau) * v * v;
       }
     }
-    G[j] = g; U[j] = u;
+    //G[j] = g; U[j] = u;
+    G[j] = randomround_filter_.randomizedRound(g);
+    U[j] = randomround_filter_.randomizedRound(u);
   }
 }
 
