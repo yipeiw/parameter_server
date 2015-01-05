@@ -1,0 +1,28 @@
+CC = g++
+OPT = -O3 -ggdb
+
+LIB = ../../lib
+
+ifndef THIRD
+THIRD=$(shell cd ../..;pwd)/third_party
+endif
+THIRD_BIN=$(THIRD)/bin
+THIRD_INC=$(THIRD)/include
+THIRD_LIB=$(THIRD)/lib
+
+LDFLAGS = -L$(THIRD_LIB) -L$(LIB) -lps -lgflags -lzmq -lprotobuf -lglog -lz \
+-lsnappy -lm -lpthread  -lstdc++ # -ltcmalloc_and_profiler # -lrt
+GTEST = -lgtest_main -lgtest
+
+WARN = -Wall -Wno-unused-function -finline-functions -Wno-sign-compare #-fno-omit-frame-pointer
+INCPATH = -I. -I${THIRD_INC}
+
+CFLAGS = -std=c++0x $(WARN) $(OPT) $(INCPATH)
+
+test:sample
+
+#%.o: %.cc
+#	$(CC) $(CFLAGS) -c $< -o $@
+
+sample: sample_test.cc $(LIB)/libps.a
+	$(CC) $(CFLAGS) $< $(GTEST) $(LDFLAGS) -o $@
