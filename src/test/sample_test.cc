@@ -6,7 +6,7 @@ using namespace PS;
 TEST(Sample, AllBasics) {
     typedef float V;
 
-    SArray<V> arr({-0.2, 0.1, -0.35, 0.4, 0.33, -0.05});
+    SArray<V> arr({-1.0, 0.3, -0.2, 0.1, -0.35, 0.6, -0.45, 0.4, 0.33, -0.05});
     std::vector<int> test_K = {2,4,1,6,0,10};
     LL << "testing array:";
     LL << arr;
@@ -14,7 +14,7 @@ TEST(Sample, AllBasics) {
     for(auto& K : test_K) {
 	LL << "testing K: " << K;
         SArray<V> test_arr; test_arr.copyFrom(arr);
-        sampleThresholdCut(test_arr, K);
+        sampleThresholdCut(test_arr, 2, test_arr.size(), K);
         LL << "\nsamped results";
         LL << test_arr;
     }

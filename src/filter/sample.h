@@ -10,28 +10,32 @@ int partition(SArray<V>& arr, size_t left, size_t right, int pivotPos);
 template <typename V>
 V findKthLargest(SArray<V>& arr, size_t left, size_t right, int K);
 template <typename V> 
-void getAbsArray(SArray<V>& arr, SArray<V>& absArr);
+void getAbsArray(SArray<V>& arr, int arr_left, int arr_right, SArray<V>& absArr);
 
-template <typename V> void sampleThresholdCut(SArray<V>& value, int K) {
-    if (K < 0 || K > value.size()) {
+template <typename V> 
+void sampleThresholdCut(SArray<V>& value, int left, int right, int K) {
+    int arr_size = right-left;
+    if (K < 0 || K > arr_size) {
 	LL << "error K " << K;
 	return;
     }
     if (K==0) {
-        value.setZero();
+        for(int i=left; i < right; i++) {
+            value[i] = 0.0;
+        }
         return;
     }
-    if (K==value.size()) {
+    if (K==arr_size) {
         return;
     }
 
-    SArray<V> sort_arr(value.size());
-    getAbsArray(value, sort_arr);
-    auto threshold = findKthLargest(sort_arr, 0, sort_arr.size()-1, K);
-    LL << "the K th largest value " << threshold << "\n";
-    LL << sort_arr;
+    SArray<V> sort_arr(arr_size);
+    getAbsArray(value, left, right, sort_arr);
+    auto threshold = findKthLargest(sort_arr, 0, arr_size, K);
+    //LL << "the K th largest value " << threshold << "\n";
+    //LL << sort_arr;
  
-    for(size_t i = 0; i < value.size(); i++) {
+    for(size_t i = left; i < right; i++) {
 	if (fabs(value[i]) < threshold) {
 		value[i] = 0.0;
 	}
@@ -84,12 +88,13 @@ size_t partition(SArray<V>& arr, size_t left, size_t right, size_t pivotPos) {
 }
 
 template <typename V>
-void getAbsArray(SArray<V>& arr, SArray<V>& absArr) {
-    for (size_t i = 0; i < arr.size(); i++) {
+void getAbsArray(SArray<V>& arr, int arr_left, int arr_right, SArray<V>& absArr) {
+    for (size_t i = arr_left; i < arr_right; i++) {
+        int k = i - arr_left;
         if (arr[i] >= 0 ) {
-           absArr[i] = arr[i];
+           absArr[k] = arr[i];
         } else {
-            absArr[i] = -1*arr[i];
+            absArr[k] = -arr[i];
         }
     }
 }

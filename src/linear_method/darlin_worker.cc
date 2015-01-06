@@ -24,8 +24,12 @@ void DarlinWorker::computeGradient(const MessagePtr& msg) {
   int time = msg->task.time() * k_time_ratio_;
   auto cmd = LinearMethod::get(msg);
 
-  if (cmd.has_roundfilter_bit_num()) {
-    randomround_filter_.set_bit(cmd.roundfilter_bit_num());
+  //if (cmd.has_roundfilter_bit_num()) {
+    //randomround_filter_.set_bit(cmd.roundfilter_bit_num());
+  //}
+
+  if (cmd.has_sample_filter_percent()) {
+      sample_filter_.setPercent(cmd.sample_filter_percent());
   }
 
   if (cmd.reset_kkt_filter()) {
@@ -157,9 +161,10 @@ void DarlinWorker::computeGradient(
         // u += tau * (1-tau) * v * v;
       }
     }
-    //G[j] = g; U[j] = u;
-    G[j] = randomround_filter_.randomizedRound(g);
-    U[j] = randomround_filter_.randomizedRound(u);
+    G[j] = g; U[j] = u;
+    //G[j] = randomround_filter_.randomizedRound(g);
+    //U[j] = randomround_filter_.randomizedRound(u);
+    //sample_filter_.sample(G, 0, X->cols());
   }
 }
 
@@ -174,12 +179,12 @@ void DarlinWorker::updateDual(int grp, SizeR col_range, SArray<double> new_w) {
     size_t j = col_range.begin() + i;
     double& cw = cur_w[j];
     double& nw = new_w[i];
-    if (kkt_filter_.marked(nw)) {
-      active_set.clear(j);
-      cw = 0;
-      delta_w[i] = 0;
-      continue;
-    }
+    //if (kkt_filter_.marked(nw)) {
+      //active_set.clear(j);
+      //cw = 0;
+      //delta_w[i] = 0;
+      //continue;
+    //}
     delta_w[i] = nw - cw;
     delta[j] = newDelta(delta_max, delta_w[i]);
     cw = nw;

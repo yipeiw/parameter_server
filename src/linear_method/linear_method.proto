@@ -17,6 +17,7 @@ message Config {
   optional LearnerConfig learner = 13;
   optional SolverConfig solver = 14;
   optional DarlingConfig darling = 15;
+  optional SmoothConfig smooth= 17;
   optional FTRLConfig ftrl = 16;
 }
 
@@ -71,6 +72,10 @@ message DarlingConfig {
   // kkt_filter_threshold_ratio. increasing this number reduces the effect of
   // kkt filter.
   optional double kkt_filter_threshold_ratio = 10 [default = 10];
+}
+
+message SmoothConfig {
+
 }
 
 message FTRLConfig {
@@ -139,6 +144,8 @@ message Call {
   optional bool reset_kkt_filter = 5;
 
   optional int32 roundfilter_bit_num = 6;
+
+  optional float sample_filter_percent = 7;
 
   repeated int32 fea_grp = 8;
   optional bool hit_cache = 9;

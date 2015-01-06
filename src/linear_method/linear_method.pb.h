@@ -1401,6 +1401,13 @@ class Call : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 roundfilter_bit_num() const;
   inline void set_roundfilter_bit_num(::google::protobuf::int32 value);
 
+  // optional float sample_filter_percent = 7;
+  inline bool has_sample_filter_percent() const;
+  inline void clear_sample_filter_percent();
+  static const int kSampleFilterPercentFieldNumber = 7;
+  inline float sample_filter_percent() const;
+  inline void set_sample_filter_percent(float value);
+
   // repeated int32 fea_grp = 8;
   inline int fea_grp_size() const;
   inline void clear_fea_grp();
@@ -1432,6 +1439,8 @@ class Call : public ::google::protobuf::Message {
   inline void clear_has_reset_kkt_filter();
   inline void set_has_roundfilter_bit_num();
   inline void clear_has_roundfilter_bit_num();
+  inline void set_has_sample_filter_percent();
+  inline void clear_has_sample_filter_percent();
   inline void set_has_hit_cache();
   inline void clear_has_hit_cache();
 
@@ -1441,12 +1450,13 @@ class Call : public ::google::protobuf::Message {
   double kkt_filter_threshold_;
   int cmd_;
   ::google::protobuf::int32 roundfilter_bit_num_;
-  ::google::protobuf::RepeatedField< ::google::protobuf::int32 > fea_grp_;
+  float sample_filter_percent_;
   bool reset_kkt_filter_;
   bool hit_cache_;
+  ::google::protobuf::RepeatedField< ::google::protobuf::int32 > fea_grp_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(7 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(8 + 31) / 32];
 
   friend void  protobuf_AddDesc_linear_5fmethod_2flinear_5fmethod_2eproto();
   friend void protobuf_AssignDesc_linear_5fmethod_2flinear_5fmethod_2eproto();
@@ -3038,6 +3048,28 @@ inline void Call::set_roundfilter_bit_num(::google::protobuf::int32 value) {
   roundfilter_bit_num_ = value;
 }
 
+// optional float sample_filter_percent = 7;
+inline bool Call::has_sample_filter_percent() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void Call::set_has_sample_filter_percent() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void Call::clear_has_sample_filter_percent() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+inline void Call::clear_sample_filter_percent() {
+  sample_filter_percent_ = 0;
+  clear_has_sample_filter_percent();
+}
+inline float Call::sample_filter_percent() const {
+  return sample_filter_percent_;
+}
+inline void Call::set_sample_filter_percent(float value) {
+  set_has_sample_filter_percent();
+  sample_filter_percent_ = value;
+}
+
 // repeated int32 fea_grp = 8;
 inline int Call::fea_grp_size() const {
   return fea_grp_.size();
@@ -3065,13 +3097,13 @@ Call::mutable_fea_grp() {
 
 // optional bool hit_cache = 9;
 inline bool Call::has_hit_cache() const {
-  return (_has_bits_[0] & 0x00000040u) != 0;
+  return (_has_bits_[0] & 0x00000080u) != 0;
 }
 inline void Call::set_has_hit_cache() {
-  _has_bits_[0] |= 0x00000040u;
+  _has_bits_[0] |= 0x00000080u;
 }
 inline void Call::clear_has_hit_cache() {
-  _has_bits_[0] &= ~0x00000040u;
+  _has_bits_[0] &= ~0x00000080u;
 }
 inline void Call::clear_hit_cache() {
   hit_cache_ = false;
