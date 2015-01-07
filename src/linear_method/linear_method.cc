@@ -4,6 +4,11 @@
 #include "base/matrix_io_inl.h"
 #include "proto/instance.pb.h"
 #include "base/io.h"
+
+#include "linear_method/smooth_worker.h"
+#include "linear_method/smooth_server.h"
+#include "linear_method/smooth_scheduler.h"
+
 #include "linear_method/darlin_worker.h"
 #include "linear_method/darlin_server.h"
 #include "linear_method/darlin_scheduler.h"
@@ -34,7 +39,16 @@ AppPtr LinearMethod::create(const Config& conf) {
       } else if (my_role == Node::SERVER) {
         return AppPtr(new DarlinServer());
       }
-    } else {
+    } else if (conf.has_smooth()) {
+      // smooth for l2 norm, passing update direclty
+      if (my_role == Node::SCHEDULER) {
+        return AppPtr(new SmoothScheduler());
+      } else if (my_role == Node::WORKER) {
+        return AppPtr(new SmoothWorker());
+      } else if (my_role == Node::SERVER) {
+        return AppPtr(new SmoothServer());
+      }
+    } else  {
       // general batch solver
       if (my_role == Node::SCHEDULER) {
         return AppPtr(new BatchScheduler());

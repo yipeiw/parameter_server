@@ -75,7 +75,7 @@ message DarlingConfig {
 }
 
 message SmoothConfig {
-
+  optional double delta_max_value = 2 [default = 5];
 }
 
 message FTRLConfig {

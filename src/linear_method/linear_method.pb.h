@@ -42,6 +42,7 @@ void protobuf_ShutdownFile_linear_5fmethod_2flinear_5fmethod_2eproto();
 class Config;
 class SolverConfig;
 class DarlingConfig;
+class SmoothConfig;
 class FTRLConfig;
 class LossConfig;
 class LearnerConfig;
@@ -280,6 +281,15 @@ class Config : public ::google::protobuf::Message {
   inline ::PS::LM::DarlingConfig* release_darling();
   inline void set_allocated_darling(::PS::LM::DarlingConfig* darling);
 
+  // optional .PS.LM.SmoothConfig smooth = 17;
+  inline bool has_smooth() const;
+  inline void clear_smooth();
+  static const int kSmoothFieldNumber = 17;
+  inline const ::PS::LM::SmoothConfig& smooth() const;
+  inline ::PS::LM::SmoothConfig* mutable_smooth();
+  inline ::PS::LM::SmoothConfig* release_smooth();
+  inline void set_allocated_smooth(::PS::LM::SmoothConfig* smooth);
+
   // optional .PS.LM.FTRLConfig ftrl = 16;
   inline bool has_ftrl() const;
   inline void clear_ftrl();
@@ -315,6 +325,8 @@ class Config : public ::google::protobuf::Message {
   inline void clear_has_solver();
   inline void set_has_darling();
   inline void clear_has_darling();
+  inline void set_has_smooth();
+  inline void clear_has_smooth();
   inline void set_has_ftrl();
   inline void clear_has_ftrl();
 
@@ -332,10 +344,11 @@ class Config : public ::google::protobuf::Message {
   ::PS::LM::LearnerConfig* learner_;
   ::PS::LM::SolverConfig* solver_;
   ::PS::LM::DarlingConfig* darling_;
+  ::PS::LM::SmoothConfig* smooth_;
   ::PS::LM::FTRLConfig* ftrl_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(13 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(14 + 31) / 32];
 
   friend void  protobuf_AddDesc_linear_5fmethod_2flinear_5fmethod_2eproto();
   friend void protobuf_AssignDesc_linear_5fmethod_2flinear_5fmethod_2eproto();
@@ -690,6 +703,88 @@ class DarlingConfig : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static DarlingConfig* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class SmoothConfig : public ::google::protobuf::Message {
+ public:
+  SmoothConfig();
+  virtual ~SmoothConfig();
+
+  SmoothConfig(const SmoothConfig& from);
+
+  inline SmoothConfig& operator=(const SmoothConfig& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const SmoothConfig& default_instance();
+
+  void Swap(SmoothConfig* other);
+
+  // implements Message ----------------------------------------------
+
+  SmoothConfig* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const SmoothConfig& from);
+  void MergeFrom(const SmoothConfig& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional double delta_max_value = 2 [default = 5];
+  inline bool has_delta_max_value() const;
+  inline void clear_delta_max_value();
+  static const int kDeltaMaxValueFieldNumber = 2;
+  inline double delta_max_value() const;
+  inline void set_delta_max_value(double value);
+
+  // @@protoc_insertion_point(class_scope:PS.LM.SmoothConfig)
+ private:
+  inline void set_has_delta_max_value();
+  inline void clear_has_delta_max_value();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  double delta_max_value_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+
+  friend void  protobuf_AddDesc_linear_5fmethod_2flinear_5fmethod_2eproto();
+  friend void protobuf_AssignDesc_linear_5fmethod_2flinear_5fmethod_2eproto();
+  friend void protobuf_ShutdownFile_linear_5fmethod_2flinear_5fmethod_2eproto();
+
+  void InitAsDefaultInstance();
+  static SmoothConfig* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -2010,15 +2105,53 @@ inline void Config::set_allocated_darling(::PS::LM::DarlingConfig* darling) {
   }
 }
 
-// optional .PS.LM.FTRLConfig ftrl = 16;
-inline bool Config::has_ftrl() const {
+// optional .PS.LM.SmoothConfig smooth = 17;
+inline bool Config::has_smooth() const {
   return (_has_bits_[0] & 0x00001000u) != 0;
 }
-inline void Config::set_has_ftrl() {
+inline void Config::set_has_smooth() {
   _has_bits_[0] |= 0x00001000u;
 }
-inline void Config::clear_has_ftrl() {
+inline void Config::clear_has_smooth() {
   _has_bits_[0] &= ~0x00001000u;
+}
+inline void Config::clear_smooth() {
+  if (smooth_ != NULL) smooth_->::PS::LM::SmoothConfig::Clear();
+  clear_has_smooth();
+}
+inline const ::PS::LM::SmoothConfig& Config::smooth() const {
+  return smooth_ != NULL ? *smooth_ : *default_instance_->smooth_;
+}
+inline ::PS::LM::SmoothConfig* Config::mutable_smooth() {
+  set_has_smooth();
+  if (smooth_ == NULL) smooth_ = new ::PS::LM::SmoothConfig;
+  return smooth_;
+}
+inline ::PS::LM::SmoothConfig* Config::release_smooth() {
+  clear_has_smooth();
+  ::PS::LM::SmoothConfig* temp = smooth_;
+  smooth_ = NULL;
+  return temp;
+}
+inline void Config::set_allocated_smooth(::PS::LM::SmoothConfig* smooth) {
+  delete smooth_;
+  smooth_ = smooth;
+  if (smooth) {
+    set_has_smooth();
+  } else {
+    clear_has_smooth();
+  }
+}
+
+// optional .PS.LM.FTRLConfig ftrl = 16;
+inline bool Config::has_ftrl() const {
+  return (_has_bits_[0] & 0x00002000u) != 0;
+}
+inline void Config::set_has_ftrl() {
+  _has_bits_[0] |= 0x00002000u;
+}
+inline void Config::clear_has_ftrl() {
+  _has_bits_[0] &= ~0x00002000u;
 }
 inline void Config::clear_ftrl() {
   if (ftrl_ != NULL) ftrl_->::PS::LM::FTRLConfig::Clear();
@@ -2497,6 +2630,32 @@ inline double DarlingConfig::kkt_filter_threshold_ratio() const {
 inline void DarlingConfig::set_kkt_filter_threshold_ratio(double value) {
   set_has_kkt_filter_threshold_ratio();
   kkt_filter_threshold_ratio_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// SmoothConfig
+
+// optional double delta_max_value = 2 [default = 5];
+inline bool SmoothConfig::has_delta_max_value() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void SmoothConfig::set_has_delta_max_value() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void SmoothConfig::clear_has_delta_max_value() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void SmoothConfig::clear_delta_max_value() {
+  delta_max_value_ = 5;
+  clear_has_delta_max_value();
+}
+inline double SmoothConfig::delta_max_value() const {
+  return delta_max_value_;
+}
+inline void SmoothConfig::set_delta_max_value(double value) {
+  set_has_delta_max_value();
+  delta_max_value_ = value;
 }
 
 // -------------------------------------------------------------------
