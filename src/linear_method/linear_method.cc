@@ -9,6 +9,10 @@
 #include "linear_method/smooth_server.h"
 #include "linear_method/smooth_scheduler.h"
 
+#include "linear_method/lrl1_worker.h"
+#include "linear_method/lrl1_server.h"
+#include "linear_method/lrl1_scheduler.h"
+
 #include "linear_method/darlin_worker.h"
 #include "linear_method/darlin_server.h"
 #include "linear_method/darlin_scheduler.h"
@@ -38,6 +42,15 @@ AppPtr LinearMethod::create(const Config& conf) {
         return AppPtr(new DarlinWorker());
       } else if (my_role == Node::SERVER) {
         return AppPtr(new DarlinServer());
+      }
+    } else if (conf.has_lrl1()) {
+      //my modified lrl1
+      if (my_role == Node::SCHEDULER) {
+        return AppPtr(new LrL1Scheduler());
+      } else if (my_role == Node::WORKER) {
+        return AppPtr(new LrL1Worker());
+      } else if (my_role == Node::SERVER) {
+        return AppPtr(new LrL1Server());
       }
     } else if (conf.has_smooth()) {
       // smooth for l2 norm, passing update direclty

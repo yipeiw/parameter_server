@@ -5,16 +5,35 @@
 
 namespace PS {
 
+enum Strategy {FIXED, ADAPT};
+
 class RoundingFilter : public Filter {
   public:
-   RoundingFilter() {
+   RoundingFilter() {}
+
+   void init(RoundFilterConfig& conf_) {
      bit_num_ = max_bit_;
      std::vector<int> bit_num_ = {1,2,4,8,16,32};
      for(auto& bitNum : bit_num_){
        bit_choice_[bitNum] = std::pow(2, -bitNum);
      }
+
+     if (conf_.type() == RoundFilterConfig::FIXED) {
+       filter_type_ = Strategy::FIXED;
+       set_bit(conf_.bit_num());
+     } else {
+       filter_type_ = Strategy::ADAPT;
+     }
    }
-  
+ 
+   void updateParam(int iter) {
+     if (filter_type_==Strategy::FIXED) {
+       return;
+     } else {
+       adaptBit(iter);
+     }
+   }
+ 
    void set_bit(int bit) {
      bit_num_ = bit;
    }
@@ -55,6 +74,7 @@ class RoundingFilter : public Filter {
     int bit_num_;
     std::map<int, double> bit_choice_;
     const int max_bit_ = 32;
+    Strategy filter_type_;
 };
 
 } // namespace PS

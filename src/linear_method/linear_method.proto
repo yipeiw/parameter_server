@@ -74,6 +74,30 @@ message DarlingConfig {
   optional double kkt_filter_threshold_ratio = 10 [default = 10];
 }
 
+message LrL1Config {
+  optional RoundFilterConfig round_filter = 1;
+  optional KKTFilterConfig kkt_filter = 2;
+  optional SampleFilterConfig sample_filter = 3;
+}
+
+message RoundFilterConfig {
+  enum Type {
+    FIXED = 1;
+    ADAPT = 2;
+  }
+  
+  required Type type = 1;
+  optional int32 bit_num = 2; 
+}
+
+message KKTFilterConfig {
+  optional double kkt_filter_threshold_ratio = 1 [default = 10];
+}
+
+message SampleFilterConfig {
+  required float percent = 1;
+}
+
 message SmoothConfig {
   optional double delta_max_value = 2 [default = 5];
 }
