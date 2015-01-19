@@ -1,43 +1,22 @@
-#include "linear_method/lrl1_scheduler.h"
+#include "linear_method/smooth_scheduler.h"
 #include "base/matrix_io.h"
 #include "base/sparse_matrix.h"
 namespace PS {
 namespace LM {
 
-void LrL1Scheduler::init() {
-  BatchScheduler::init();
-  LL << "init scheduler ..";
-
-  if (conf_.lrl1().has_round_filter() ) {
-    using_round_filter_ = true;
-    auto round_conf = conf_.lrl1().round_filter();
-    randomround_filter_.init(round_conf);
-    LL << "round filter config " << round_conf.type() << " Bit:" << round_conf.bit_num();
-  }
-  LL << "check round filter " << using_round_filter_;
- 
-  /*if (conf_.has_kkt_filter()) {
-    using_kkt_filter_ = true;
-    auto kkt_conf = conf_.kkt_filter();
-    kkt_filter_.init(kkt_conf);
-  }
-  if (conf_.has_sample_filter()) {
-    using_sample_filter = true;
-    auto sample_conf = conf_.sample_filter();
-    sample_filter_.init(sample_conf);
-  }*/
-}
-
-
-void LrL1Scheduler::runIteration() {
-  CHECK(conf_.has_lrl1());
+void SmoothScheduler::runIteration() {
+  //only check penalty and update type
+  CHECK(conf_.has_smooth());
   CHECK_EQ(conf_.loss().type(), LossConfig::LOGIT);
-  CHECK_EQ(conf_.penalty().type(), PenaltyConfig::L1);
+  CHECK_EQ(conf_.penalty().type(), PenaltyConfig::L2);
+
   auto sol_cf = conf_.solver();
   int tau = sol_cf.max_block_delay();
-  //kkt_filter_threshold_ = 1e20; 
-  //float samplePercent = 0.1; //for sample_filter baseline test
-  //bool reset_kkt_filter = false;
+  kkt_filter_threshold_ = 1e20; 
+  
+  float samplePercent = 0.1; //for sample_filter baseline test
+
+  bool reset_kkt_filter = false;
   bool random_blk_order = sol_cf.random_feature_block_order();
   if (!random_blk_order) {
     LI << "Warning: Randomized block order often acclerates the convergence.";
@@ -68,22 +47,18 @@ void LrL1Scheduler::runIteration() {
       Task update = newTask(Call::UPDATE_MODEL);
       auto cmd = set(&update);
       //round filter
-      if (using_round_filter_) {
-        cmd->set_roundfilter_bit_num(randomround_filter_.get_bit());
-        if (i == 0) {
-          LL << "broadcasting bit num " << randomround_filter_.get_bit();
-        }
-      }
+      //cmd->set_roundfilter_bit_num(randomround_filter_.get_bit());
 
       //if (iter == 0 && i ==0 ) {
         //cmd->set_sample_filter_percent(samplePercent);
       //}
 
       // kkt filter
-      /*if (i == 0) {
-        cmd->set_kkt_filter_threshold(kkt_filter_threshold_);
-        if (reset_kkt_filter) cmd->set_reset_kkt_filter(true);
-      }*/
+      //if (i == 0) {
+        //cmd->set_kkt_filter_threshold(kkt_filter_threshold_);
+        //if (reset_kkt_filter) cmd->set_reset_kkt_filter(true);
+      //}
+
       // block info
       auto blk = fea_blk_[order[i]];
       blk.second.to(cmd->mutable_key());
@@ -114,15 +89,10 @@ void LrL1Scheduler::runIteration() {
         eval, [this, iter](){ Scheduler::mergeProgress(iter); });
     showProgress(iter);
 
-    if (using_round_filter_) {
-        randomround_filter_.updateParam(iter);
-    }
-
     // update the kkt filter strategy
-    /*double vio = g_progress_[iter].violation();
-    double ratio = conf_.darling().kkt_filter_threshold_ratio();
-    kkt_filter_threshold_ = vio / (double)g_train_info_.num_ex() * ratio;
-    */
+    //double vio = g_progress_[iter].violation();
+    //double ratio = conf_.darling().kkt_filter_threshold_ratio();
+    //kkt_filter_threshold_ = vio / (double)g_train_info_.num_ex() * ratio;
 
     // check if finished
     double rel = g_progress_[iter].relative_objv();
@@ -130,19 +100,19 @@ void LrL1Scheduler::runIteration() {
       //if (reset_kkt_filter) {
         LI << "Stopped: relative objective <= " << sol_cf.epsilon();
         break;
-      /*} else {
-        reset_kkt_filter = true;
-      }
-    } else {
-      reset_kkt_filter = false;*/
-    }
+      //} else {
+        //reset_kkt_filter = true;
+      //}
+    } //else {
+      //reset_kkt_filter = false;
+    //}
     if (iter == max_iter - 1) {
       LI << "Reached maximal " << max_iter << " data passes";
     }
   }
 }
 
-/*void LrL1Scheduler::showKKTFilter(int iter) {
+void SmoothScheduler::showKKTFilter(int iter) {
   if (iter == -3) {
     fprintf(stderr, "|      KKT filter     ");
   } else if (iter == -2) {
@@ -153,14 +123,14 @@ void LrL1Scheduler::runIteration() {
     auto prog = g_progress_[iter];
     fprintf(stderr, "| %.1e %11llu ", kkt_filter_threshold_, (uint64)prog.nnz_active_set());
   }
-}*/
+}
 
-void LrL1Scheduler::showProgress(int iter) {
+void SmoothScheduler::showProgress(int iter) {
   int s = iter == 0 ? -3 : iter;
   for (int i = s; i <= iter; ++i) {
     showObjective(i);
     showNNZ(i);
-    //showKKTFilter(i);
+    showKKTFilter(i);
     showTime(i);
   }
 }

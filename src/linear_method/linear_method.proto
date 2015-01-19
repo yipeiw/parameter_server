@@ -17,8 +17,9 @@ message Config {
   optional LearnerConfig learner = 13;
   optional SolverConfig solver = 14;
   optional DarlingConfig darling = 15;
-  optional SmoothConfig smooth= 17;
   optional FTRLConfig ftrl = 16;
+  optional LrL1Config lrl1 = 17;
+  optional SmoothConfig smooth= 18;
 }
 
 message SolverConfig {
@@ -75,9 +76,11 @@ message DarlingConfig {
 }
 
 message LrL1Config {
-  optional RoundFilterConfig round_filter = 1;
-  optional KKTFilterConfig kkt_filter = 2;
-  optional SampleFilterConfig sample_filter = 3;
+  optional double delta_init_value = 1 [default = 1];
+  optional double delta_max_value = 2 [default = 5];
+  optional RoundFilterConfig round_filter = 5;
+  optional KKTFilterConfig kkt_filter = 6;
+  optional SampleFilterConfig sample_filter = 7;
 }
 
 message RoundFilterConfig {

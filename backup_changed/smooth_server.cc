@@ -1,40 +1,37 @@
-#include "linear_method/lrl1_server.h"
+#include "linear_method/smooth_server.h"
 namespace PS {
 namespace LM {
 
-void LrL1Server::preprocessData(const MessagePtr& msg) {
+void SmoothServer::preprocessData(const MessagePtr& msg) {
   BatchServer::preprocessData(msg);
   for (int grp : fea_grp_) {
     size_t n = model_->key(grp).size();
-    delta_[grp].resize(n, conf_.lrl1().delta_init_value());
-    /*if (using_kkt_filter_) {
-      active_set_[grp].resize(n, true);
-    }*/
+    active_set_[grp].resize(n, true);
+    delta_[grp].resize(n, conf_.darling().delta_init_value());
   }
   //randomround_filter_.set_bit(32);
 }
 
-void LrL1Server::updateWeight(const MessagePtr& msg) {
+void SmoothServer::updateWeight(const MessagePtr& msg) {
   int time = msg->task.time() * k_time_ratio_;
   auto cmd = get(msg);
   
   //round filter update
-  if (cmd.has_roundfilter_bit_num()) {
-    using_round_filter_ = true; //might be redundant, to be modified later
-    randomround_filter_.set_bit(cmd.roundfilter_bit_num()); 
-  }
+  //if (cmd.has_roundfilter_bit_num()) {
+    //randomround_filter_.set_bit(cmd.roundfilter_bit_num()); 
+  //}
 
-  /*if (cmd.has_sample_filter_percent()) {
+  if (cmd.has_sample_filter_percent()) {
      sample_filter_.setPercent(cmd.sample_filter_percent()); 
   }
+
   if (cmd.has_kkt_filter_threshold()) {
     kkt_filter_threshold_ = cmd.kkt_filter_threshold();
     violation_ = 0;
   }
   if (cmd.reset_kkt_filter()) {
     for (int grp : fea_grp_) active_set_[grp].fill(true);
-  }*/
-
+  }
   CHECK_EQ(cmd.fea_grp_size(), 1);
   int grp = cmd.fea_grp(0);
   Range<Key> g_key_range(cmd.key());
@@ -50,9 +47,11 @@ void LrL1Server::updateWeight(const MessagePtr& msg) {
   if (!col_range.empty()) {
     auto data = model_->received(time);
     CHECK_EQ(col_range, data.first);
+    //CHECK_EQ(data.second.size(), 1);
     CHECK_EQ(data.second.size(), 2);
 
     sys_.hb().startTimer(HeartbeatInfo::TimerType::BUSY);
+    //updateWeight(grp, col_range, data.second[0]);
     updateWeight(grp, col_range, data.second[0], data.second[1]);
     sys_.hb().stopTimer(HeartbeatInfo::TimerType::BUSY);
   }
@@ -60,58 +59,60 @@ void LrL1Server::updateWeight(const MessagePtr& msg) {
   model_->finish(kWorkerGroup, time+1);
 }
 
-void LrL1Server::updateWeight(
-    int grp, SizeR range, SArray<double> G, SArray<double> U) {
+void SmoothServer::updateWeight(
+//    int grp, SizeR range, SArray<double> Delta) {
+  //CHECK_EQ(Delta.size(), range.size());
+     int grp, SizeR range, SArray<double> G, SArray<double> U) {
   CHECK_EQ(G.size(), range.size());
   CHECK_EQ(U.size(), range.size());
 
   double eta = conf_.learning_rate().eta();
   double lambda = conf_.penalty().lambda(0);
-  double delta_max = conf_.lrl1().delta_max_value();
-  auto& value = model_->value(grp);
+  double delta_max = conf_.smooth().delta_max_value();
 
+  auto& value = model_->value(grp);
   //auto& active_set = active_set_[grp];
   auto& delta = delta_[grp];
-
   for (size_t i = 0; i < range.size(); ++i) {
     size_t k = i + range.begin();
     //if (!active_set.test(k)) continue;
     double g = G[i], u = U[i] / eta + 1e-10;
-    double g_pos = g + lambda, g_neg = g - lambda;
+    //double g_pos = g + lambda, g_neg = g - lambda;
     double& w = value[k];
-    double d = - w; // vio = 0;
+    //double d = - w, vio = 0;
 
-    /*if (w == 0) {
-      if (g_pos < 0) {
-        vio = - g_pos;
-      } else if (g_neg > 0) {
-        vio = g_neg;
-      } else if (g_pos > kkt_filter_threshold_ && g_neg < - kkt_filter_threshold_) {
+    //double d = (eta + 1e-10) * (-Delta[i]); //suppose using 0.5*lambda |w|^2
+    double d = -(g+lambda*w)/u;
+    //if (w == 0) {
+      //if (g_pos < 0) {
+        //vio = - g_pos;
+      //} else if (g_neg > 0) {
+        //vio = g_neg;
+      //} else if (g_pos > kkt_filter_threshold_ && g_neg < - kkt_filter_threshold_) {
         //active_set.clear(k);
         //kkt_filter_.mark(&w);
-        continue;
-      }
-    }
-    violation_ = std::max(violation_, vio);*/
+        //continue;
+      //}
+    //}
+    //violation_ = std::max(violation_, vio);
 
-    if (g_pos <= u * w) {
-      d = - g_pos / u;
-    } else if (g_neg >= u * w) {
-      d = - g_neg / u;
-    }
+    //if (g_pos <= u * w) {
+      //d = - g_pos / u;
+    //} else if (g_neg >= u * w) {
+      //d = - g_neg / u;
+    //}
+
     d = std::min(delta[k], std::max(-delta[k], d));
     delta[k] = newDelta(delta_max, d);
     w += d;
 
-    if (using_round_filter_) {
-      w = randomround_filter_.randomizedRound(w);
-    } 
+    //w = randomround_filter_.randomizedRound(w); 
   }
 
   //sample_filter_.sample(value, range.begin(), range.end());
 }
 
-void LrL1Server::evaluateProgress(Progress* prog) {
+void SmoothServer::evaluateProgress(Progress* prog) {
   size_t nnz_w = 0;
   size_t nnz_as = 0;
   double objv = 0;
@@ -120,14 +121,14 @@ void LrL1Server::evaluateProgress(Progress* prog) {
     for (double w : value) {
       if (kkt_filter_.marked(w) || w == 0) continue;
       ++ nnz_w;
-      objv += fabs(w);
+      objv += w*w; //l2 norm
     }
     nnz_as += active_set_[grp].nnz();
   }
-  prog->add_objv(objv * conf_.penalty().lambda(0));
+  prog->add_objv(0.5*objv * conf_.penalty().lambda(0));
   prog->set_nnz_w(nnz_w);
-  //prog->set_violation(violation_);
-  //prog->set_nnz_active_set(nnz_as);
+  prog->set_violation(violation_);
+  prog->set_nnz_active_set(nnz_as);
 
 }
 

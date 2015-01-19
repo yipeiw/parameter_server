@@ -1,10 +1,10 @@
-#include "linear_method/lrl1_worker.h"
+#include "linear_method/smooth_worker.h"
 #include "base/sparse_matrix.h"
 
 namespace PS {
 namespace LM {
 
-void LrL1Worker::preprocessData(const MessagePtr& msg) {
+void SmoothWorker::preprocessData(const MessagePtr& msg) {
   BatchWorker::preprocessData(msg);
   // dual_ = exp(y.*(X_*w_))
   if (conf_.init_w().type() == ParameterInitConfig::ZERO) {
@@ -14,32 +14,27 @@ void LrL1Worker::preprocessData(const MessagePtr& msg) {
   }
   for (int grp : fea_grp_) {
     size_t n = model_->key(grp).size();
-    /*if (using_kkt_filter_) {
-      active_set_[grp].resize(n, true);
-    }*/
+    active_set_[grp].resize(n, true);
     delta_[grp].resize(n, conf_.darling().delta_init_value());
   }
   //randomround_filter_.set_bit(32);
 }
 
-void LrL1Worker::computeGradient(const MessagePtr& msg) {
+void SmoothWorker::computeGradient(const MessagePtr& msg) {
   int time = msg->task.time() * k_time_ratio_;
   auto cmd = LinearMethod::get(msg);
 
-  if (cmd.has_roundfilter_bit_num()) {
-    using_round_filter_ = true;
-    randomround_filter_.set_bit(cmd.roundfilter_bit_num());
-  }
+  //if (cmd.has_roundfilter_bit_num()) {
+    //randomround_filter_.set_bit(cmd.roundfilter_bit_num());
+  //}
 
-  LL << "round filter " << using_round_filter_;
-
-  /*if (cmd.has_sample_filter_percent()) {
+  if (cmd.has_sample_filter_percent()) {
       sample_filter_.setPercent(cmd.sample_filter_percent());
   }
+
   if (cmd.reset_kkt_filter()) {
     for (int grp : fea_grp_) active_set_[grp].fill(true);
-  }*/
-
+  }
   CHECK_EQ(cmd.fea_grp_size(), 1);
   int grp = cmd.fea_grp(0);
   Range<Key> g_key_range(cmd.key());
@@ -56,7 +51,7 @@ void LrL1Worker::computeGradient(const MessagePtr& msg) {
 }
 
 
-void LrL1Worker::pullAndUpdateDual(
+void SmoothWorker::pullAndUpdateDual(
     int time, Range<Key> g_key_range, int grp, SizeR col_range,
     const MessagePtr& msg) {
   // pull the updated weight from the server
@@ -83,15 +78,16 @@ void LrL1Worker::pullAndUpdateDual(
   CHECK_EQ(time, model_->pull(pull));
 }
 
-void LrL1Worker::computeAndPushGradient(
+void SmoothWorker::computeAndPushGradient(
     int time, Range<Key> g_key_range, int grp, SizeR col_range) {
   SArray<double> G(col_range.size(), 0);
   SArray<double> U(col_range.size(), 0);
 
+  //SArray<double> Delta(col_range.size(), 0);
+
   mu_.lock();  // lock the dual_
   sys_.hb().startTimer(HeartbeatInfo::TimerType::BUSY);
   busy_timer_.start();
-
   // compute the gradient in multi-thread
   if (!col_range.empty()) {
     CHECK_GT(FLAGS_num_threads, 0);
@@ -106,6 +102,9 @@ void LrL1Worker::computeAndPushGradient(
       pool.add([this, grp, thr_range, gr, &G, &U]() {
           computeGradient(grp, thr_range, G.segment(gr), U.segment(gr));
         });
+      //pool.add([this, grp, thr_range, gr, &Delta]() {
+        //  computeGradient(grp, thr_range, Delta.segment(gr));
+      //});
     }
     pool.startWorkers();
   }
@@ -116,22 +115,24 @@ void LrL1Worker::computeAndPushGradient(
   // push the gradient into servers
   MessagePtr push(new Message(kServerGroup, time));
   push->setKey(model_->key(grp).segment(col_range));
-  push->addValue({G, U});
+  push->addValue({G, U}); //changed to only passing update_delta
+  //push->addValue({Delta});
   g_key_range.to(push->task.mutable_key_range());
   push->task.set_key_channel(grp);
   push->addFilter(FilterConfig::KEY_CACHING);
   CHECK_EQ(time, model_->push(push));
 }
 
-void LrL1Worker::computeGradient(
+void SmoothWorker::computeGradient(
+    //int grp, SizeR col_range, SArray<double> Delta) {
     int grp, SizeR col_range, SArray<double> G, SArray<double> U) {
   CHECK_EQ(G.size(), col_range.size());
   CHECK_EQ(U.size(), col_range.size());
+  //CHECK_EQ(Delta.size(), col_range.size());
   CHECK(X_[grp]->colMajor());
 
-  //const auto& active_set = active_set_[grp];
+  const auto& active_set = active_set_[grp];
   const auto& delta = delta_[grp];
-
   const double* y = y_->value().data();
   auto X = std::static_pointer_cast<SparseMatrix<uint32, double>>(
       X_[grp]->colBlock(col_range));
@@ -139,18 +140,21 @@ void LrL1Worker::computeGradient(
   uint32* index = X->index().data() + offset[0];
   double* value = X->value().data() + offset[0];
   bool binary = X->binary();
+  //need to know w value 
+  auto& cw = model_->value(grp);
+  double lambda = conf_.penalty().lambda(0);
 
   // j: column id, i: row id
   for (size_t j = 0; j < X->cols(); ++j) {
     size_t k = j + col_range.begin();
     size_t n = offset[j+1] - offset[j];
-    /*if (!active_set.test(k)) {
-      index += n;
-      if (!binary) value += n;
-      kkt_filter_.mark(&G[j]);
-      kkt_filter_.mark(&U[j]);
-      continue;
-    }*/
+    //if (!active_set.test(k)) {
+      //index += n;
+      //if (!binary) value += n;
+      //kkt_filter_.mark(&G[j]);
+      //kkt_filter_.mark(&U[j]);
+      //continue;
+    //}
     double g = 0, u = 0;
     double d = binary ? exp(delta[k]) : delta[k];
     // TODO unroll loop
@@ -168,19 +172,18 @@ void LrL1Worker::computeGradient(
         // u += tau * (1-tau) * v * v;
       }
     }
+    //Delta[j] = (g+lambda*cw[k])/u;
+
     G[j] = g; U[j] = u;
-    
-    if (using_round_filter_) {
-      G[j] = randomround_filter_.randomizedRound(g);
-      U[j] = randomround_filter_.randomizedRound(u);
-    }
+    //G[j] = randomround_filter_.randomizedRound(g);
+    //U[j] = randomround_filter_.randomizedRound(u);
     //sample_filter_.sample(G, 0, X->cols());
   }
 }
 
-void LrL1Worker::updateDual(int grp, SizeR col_range, SArray<double> new_w) {
+void SmoothWorker::updateDual(int grp, SizeR col_range, SArray<double> new_w) {
   auto& cur_w = model_->value(grp);
-  //auto& active_set = active_set_[grp];
+  auto& active_set = active_set_[grp];
   auto& delta = delta_[grp];
 
   double delta_max = conf_.darling().delta_max_value();
@@ -223,12 +226,12 @@ void LrL1Worker::updateDual(int grp, SizeR col_range, SArray<double> new_w) {
   mu_.unlock();  // lock the dual_
 }
 
-void LrL1Worker::updateDual(
+void SmoothWorker::updateDual(
     int grp, SizeR row_range, SizeR col_range, SArray<double> w_delta) {
   CHECK_EQ(w_delta.size(), col_range.size());
   CHECK(X_[grp]->colMajor());
 
-  //const auto& active_set = active_set_[grp];
+  const auto& active_set = active_set_[grp];
   double* y = y_->value().data();
   auto X = std::static_pointer_cast<
     SparseMatrix<uint32, double>>(X_[grp]->colBlock(col_range));
@@ -242,10 +245,10 @@ void LrL1Worker::updateDual(
     size_t k  = j + col_range.begin();
     size_t n = offset[j+1] - offset[j];
     double wd = w_delta[j];
-    /*if (wd == 0 || !active_set.test(k)) {
+    if (wd == 0 || !active_set.test(k)) {
       index += n;
       continue;
-    }*/
+    }
     // TODO unroll the loop
     for (size_t o = offset[j]; o < offset[j+1]; ++o) {
       auto i = *(index++);
@@ -255,7 +258,7 @@ void LrL1Worker::updateDual(
   }
 }
 
-void LrL1Worker::evaluateProgress(Progress* prog) {
+void SmoothWorker::evaluateProgress(Progress* prog) {
   busy_timer_.start();
   mu_.lock();  // lock the dual_
   prog->add_objv(log(1+1/dual_.eigenArray()).sum());

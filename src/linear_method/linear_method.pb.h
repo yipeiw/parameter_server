@@ -42,6 +42,10 @@ void protobuf_ShutdownFile_linear_5fmethod_2flinear_5fmethod_2eproto();
 class Config;
 class SolverConfig;
 class DarlingConfig;
+class LrL1Config;
+class RoundFilterConfig;
+class KKTFilterConfig;
+class SampleFilterConfig;
 class SmoothConfig;
 class FTRLConfig;
 class LossConfig;
@@ -51,6 +55,25 @@ class DataInfo;
 class Call;
 class AggGradLearnerArg;
 
+enum RoundFilterConfig_Type {
+  RoundFilterConfig_Type_FIXED = 1,
+  RoundFilterConfig_Type_ADAPT = 2
+};
+bool RoundFilterConfig_Type_IsValid(int value);
+const RoundFilterConfig_Type RoundFilterConfig_Type_Type_MIN = RoundFilterConfig_Type_FIXED;
+const RoundFilterConfig_Type RoundFilterConfig_Type_Type_MAX = RoundFilterConfig_Type_ADAPT;
+const int RoundFilterConfig_Type_Type_ARRAYSIZE = RoundFilterConfig_Type_Type_MAX + 1;
+
+const ::google::protobuf::EnumDescriptor* RoundFilterConfig_Type_descriptor();
+inline const ::std::string& RoundFilterConfig_Type_Name(RoundFilterConfig_Type value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    RoundFilterConfig_Type_descriptor(), value);
+}
+inline bool RoundFilterConfig_Type_Parse(
+    const ::std::string& name, RoundFilterConfig_Type* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<RoundFilterConfig_Type>(
+    RoundFilterConfig_Type_descriptor(), name, value);
+}
 enum LossConfig_Type {
   LossConfig_Type_SQUARE = 1,
   LossConfig_Type_LOGIT = 2,
@@ -281,15 +304,6 @@ class Config : public ::google::protobuf::Message {
   inline ::PS::LM::DarlingConfig* release_darling();
   inline void set_allocated_darling(::PS::LM::DarlingConfig* darling);
 
-  // optional .PS.LM.SmoothConfig smooth = 17;
-  inline bool has_smooth() const;
-  inline void clear_smooth();
-  static const int kSmoothFieldNumber = 17;
-  inline const ::PS::LM::SmoothConfig& smooth() const;
-  inline ::PS::LM::SmoothConfig* mutable_smooth();
-  inline ::PS::LM::SmoothConfig* release_smooth();
-  inline void set_allocated_smooth(::PS::LM::SmoothConfig* smooth);
-
   // optional .PS.LM.FTRLConfig ftrl = 16;
   inline bool has_ftrl() const;
   inline void clear_ftrl();
@@ -298,6 +312,24 @@ class Config : public ::google::protobuf::Message {
   inline ::PS::LM::FTRLConfig* mutable_ftrl();
   inline ::PS::LM::FTRLConfig* release_ftrl();
   inline void set_allocated_ftrl(::PS::LM::FTRLConfig* ftrl);
+
+  // optional .PS.LM.LrL1Config lrl1 = 17;
+  inline bool has_lrl1() const;
+  inline void clear_lrl1();
+  static const int kLrl1FieldNumber = 17;
+  inline const ::PS::LM::LrL1Config& lrl1() const;
+  inline ::PS::LM::LrL1Config* mutable_lrl1();
+  inline ::PS::LM::LrL1Config* release_lrl1();
+  inline void set_allocated_lrl1(::PS::LM::LrL1Config* lrl1);
+
+  // optional .PS.LM.SmoothConfig smooth = 18;
+  inline bool has_smooth() const;
+  inline void clear_smooth();
+  static const int kSmoothFieldNumber = 18;
+  inline const ::PS::LM::SmoothConfig& smooth() const;
+  inline ::PS::LM::SmoothConfig* mutable_smooth();
+  inline ::PS::LM::SmoothConfig* release_smooth();
+  inline void set_allocated_smooth(::PS::LM::SmoothConfig* smooth);
 
   // @@protoc_insertion_point(class_scope:PS.LM.Config)
  private:
@@ -325,10 +357,12 @@ class Config : public ::google::protobuf::Message {
   inline void clear_has_solver();
   inline void set_has_darling();
   inline void clear_has_darling();
-  inline void set_has_smooth();
-  inline void clear_has_smooth();
   inline void set_has_ftrl();
   inline void clear_has_ftrl();
+  inline void set_has_lrl1();
+  inline void clear_has_lrl1();
+  inline void set_has_smooth();
+  inline void clear_has_smooth();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -344,11 +378,12 @@ class Config : public ::google::protobuf::Message {
   ::PS::LM::LearnerConfig* learner_;
   ::PS::LM::SolverConfig* solver_;
   ::PS::LM::DarlingConfig* darling_;
-  ::PS::LM::SmoothConfig* smooth_;
   ::PS::LM::FTRLConfig* ftrl_;
+  ::PS::LM::LrL1Config* lrl1_;
+  ::PS::LM::SmoothConfig* smooth_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(14 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(15 + 31) / 32];
 
   friend void  protobuf_AddDesc_linear_5fmethod_2flinear_5fmethod_2eproto();
   friend void protobuf_AssignDesc_linear_5fmethod_2flinear_5fmethod_2eproto();
@@ -703,6 +738,414 @@ class DarlingConfig : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static DarlingConfig* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class LrL1Config : public ::google::protobuf::Message {
+ public:
+  LrL1Config();
+  virtual ~LrL1Config();
+
+  LrL1Config(const LrL1Config& from);
+
+  inline LrL1Config& operator=(const LrL1Config& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const LrL1Config& default_instance();
+
+  void Swap(LrL1Config* other);
+
+  // implements Message ----------------------------------------------
+
+  LrL1Config* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const LrL1Config& from);
+  void MergeFrom(const LrL1Config& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional double delta_init_value = 1 [default = 1];
+  inline bool has_delta_init_value() const;
+  inline void clear_delta_init_value();
+  static const int kDeltaInitValueFieldNumber = 1;
+  inline double delta_init_value() const;
+  inline void set_delta_init_value(double value);
+
+  // optional double delta_max_value = 2 [default = 5];
+  inline bool has_delta_max_value() const;
+  inline void clear_delta_max_value();
+  static const int kDeltaMaxValueFieldNumber = 2;
+  inline double delta_max_value() const;
+  inline void set_delta_max_value(double value);
+
+  // optional .PS.LM.RoundFilterConfig round_filter = 5;
+  inline bool has_round_filter() const;
+  inline void clear_round_filter();
+  static const int kRoundFilterFieldNumber = 5;
+  inline const ::PS::LM::RoundFilterConfig& round_filter() const;
+  inline ::PS::LM::RoundFilterConfig* mutable_round_filter();
+  inline ::PS::LM::RoundFilterConfig* release_round_filter();
+  inline void set_allocated_round_filter(::PS::LM::RoundFilterConfig* round_filter);
+
+  // optional .PS.LM.KKTFilterConfig kkt_filter = 6;
+  inline bool has_kkt_filter() const;
+  inline void clear_kkt_filter();
+  static const int kKktFilterFieldNumber = 6;
+  inline const ::PS::LM::KKTFilterConfig& kkt_filter() const;
+  inline ::PS::LM::KKTFilterConfig* mutable_kkt_filter();
+  inline ::PS::LM::KKTFilterConfig* release_kkt_filter();
+  inline void set_allocated_kkt_filter(::PS::LM::KKTFilterConfig* kkt_filter);
+
+  // optional .PS.LM.SampleFilterConfig sample_filter = 7;
+  inline bool has_sample_filter() const;
+  inline void clear_sample_filter();
+  static const int kSampleFilterFieldNumber = 7;
+  inline const ::PS::LM::SampleFilterConfig& sample_filter() const;
+  inline ::PS::LM::SampleFilterConfig* mutable_sample_filter();
+  inline ::PS::LM::SampleFilterConfig* release_sample_filter();
+  inline void set_allocated_sample_filter(::PS::LM::SampleFilterConfig* sample_filter);
+
+  // @@protoc_insertion_point(class_scope:PS.LM.LrL1Config)
+ private:
+  inline void set_has_delta_init_value();
+  inline void clear_has_delta_init_value();
+  inline void set_has_delta_max_value();
+  inline void clear_has_delta_max_value();
+  inline void set_has_round_filter();
+  inline void clear_has_round_filter();
+  inline void set_has_kkt_filter();
+  inline void clear_has_kkt_filter();
+  inline void set_has_sample_filter();
+  inline void clear_has_sample_filter();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  double delta_init_value_;
+  double delta_max_value_;
+  ::PS::LM::RoundFilterConfig* round_filter_;
+  ::PS::LM::KKTFilterConfig* kkt_filter_;
+  ::PS::LM::SampleFilterConfig* sample_filter_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
+
+  friend void  protobuf_AddDesc_linear_5fmethod_2flinear_5fmethod_2eproto();
+  friend void protobuf_AssignDesc_linear_5fmethod_2flinear_5fmethod_2eproto();
+  friend void protobuf_ShutdownFile_linear_5fmethod_2flinear_5fmethod_2eproto();
+
+  void InitAsDefaultInstance();
+  static LrL1Config* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class RoundFilterConfig : public ::google::protobuf::Message {
+ public:
+  RoundFilterConfig();
+  virtual ~RoundFilterConfig();
+
+  RoundFilterConfig(const RoundFilterConfig& from);
+
+  inline RoundFilterConfig& operator=(const RoundFilterConfig& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const RoundFilterConfig& default_instance();
+
+  void Swap(RoundFilterConfig* other);
+
+  // implements Message ----------------------------------------------
+
+  RoundFilterConfig* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const RoundFilterConfig& from);
+  void MergeFrom(const RoundFilterConfig& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  typedef RoundFilterConfig_Type Type;
+  static const Type FIXED = RoundFilterConfig_Type_FIXED;
+  static const Type ADAPT = RoundFilterConfig_Type_ADAPT;
+  static inline bool Type_IsValid(int value) {
+    return RoundFilterConfig_Type_IsValid(value);
+  }
+  static const Type Type_MIN =
+    RoundFilterConfig_Type_Type_MIN;
+  static const Type Type_MAX =
+    RoundFilterConfig_Type_Type_MAX;
+  static const int Type_ARRAYSIZE =
+    RoundFilterConfig_Type_Type_ARRAYSIZE;
+  static inline const ::google::protobuf::EnumDescriptor*
+  Type_descriptor() {
+    return RoundFilterConfig_Type_descriptor();
+  }
+  static inline const ::std::string& Type_Name(Type value) {
+    return RoundFilterConfig_Type_Name(value);
+  }
+  static inline bool Type_Parse(const ::std::string& name,
+      Type* value) {
+    return RoundFilterConfig_Type_Parse(name, value);
+  }
+
+  // accessors -------------------------------------------------------
+
+  // required .PS.LM.RoundFilterConfig.Type type = 1;
+  inline bool has_type() const;
+  inline void clear_type();
+  static const int kTypeFieldNumber = 1;
+  inline ::PS::LM::RoundFilterConfig_Type type() const;
+  inline void set_type(::PS::LM::RoundFilterConfig_Type value);
+
+  // optional int32 bit_num = 2;
+  inline bool has_bit_num() const;
+  inline void clear_bit_num();
+  static const int kBitNumFieldNumber = 2;
+  inline ::google::protobuf::int32 bit_num() const;
+  inline void set_bit_num(::google::protobuf::int32 value);
+
+  // @@protoc_insertion_point(class_scope:PS.LM.RoundFilterConfig)
+ private:
+  inline void set_has_type();
+  inline void clear_has_type();
+  inline void set_has_bit_num();
+  inline void clear_has_bit_num();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  int type_;
+  ::google::protobuf::int32 bit_num_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+
+  friend void  protobuf_AddDesc_linear_5fmethod_2flinear_5fmethod_2eproto();
+  friend void protobuf_AssignDesc_linear_5fmethod_2flinear_5fmethod_2eproto();
+  friend void protobuf_ShutdownFile_linear_5fmethod_2flinear_5fmethod_2eproto();
+
+  void InitAsDefaultInstance();
+  static RoundFilterConfig* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class KKTFilterConfig : public ::google::protobuf::Message {
+ public:
+  KKTFilterConfig();
+  virtual ~KKTFilterConfig();
+
+  KKTFilterConfig(const KKTFilterConfig& from);
+
+  inline KKTFilterConfig& operator=(const KKTFilterConfig& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const KKTFilterConfig& default_instance();
+
+  void Swap(KKTFilterConfig* other);
+
+  // implements Message ----------------------------------------------
+
+  KKTFilterConfig* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const KKTFilterConfig& from);
+  void MergeFrom(const KKTFilterConfig& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional double kkt_filter_threshold_ratio = 1 [default = 10];
+  inline bool has_kkt_filter_threshold_ratio() const;
+  inline void clear_kkt_filter_threshold_ratio();
+  static const int kKktFilterThresholdRatioFieldNumber = 1;
+  inline double kkt_filter_threshold_ratio() const;
+  inline void set_kkt_filter_threshold_ratio(double value);
+
+  // @@protoc_insertion_point(class_scope:PS.LM.KKTFilterConfig)
+ private:
+  inline void set_has_kkt_filter_threshold_ratio();
+  inline void clear_has_kkt_filter_threshold_ratio();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  double kkt_filter_threshold_ratio_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+
+  friend void  protobuf_AddDesc_linear_5fmethod_2flinear_5fmethod_2eproto();
+  friend void protobuf_AssignDesc_linear_5fmethod_2flinear_5fmethod_2eproto();
+  friend void protobuf_ShutdownFile_linear_5fmethod_2flinear_5fmethod_2eproto();
+
+  void InitAsDefaultInstance();
+  static KKTFilterConfig* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class SampleFilterConfig : public ::google::protobuf::Message {
+ public:
+  SampleFilterConfig();
+  virtual ~SampleFilterConfig();
+
+  SampleFilterConfig(const SampleFilterConfig& from);
+
+  inline SampleFilterConfig& operator=(const SampleFilterConfig& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const SampleFilterConfig& default_instance();
+
+  void Swap(SampleFilterConfig* other);
+
+  // implements Message ----------------------------------------------
+
+  SampleFilterConfig* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const SampleFilterConfig& from);
+  void MergeFrom(const SampleFilterConfig& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // required float percent = 1;
+  inline bool has_percent() const;
+  inline void clear_percent();
+  static const int kPercentFieldNumber = 1;
+  inline float percent() const;
+  inline void set_percent(float value);
+
+  // @@protoc_insertion_point(class_scope:PS.LM.SampleFilterConfig)
+ private:
+  inline void set_has_percent();
+  inline void clear_has_percent();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  float percent_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+
+  friend void  protobuf_AddDesc_linear_5fmethod_2flinear_5fmethod_2eproto();
+  friend void protobuf_AssignDesc_linear_5fmethod_2flinear_5fmethod_2eproto();
+  friend void protobuf_ShutdownFile_linear_5fmethod_2flinear_5fmethod_2eproto();
+
+  void InitAsDefaultInstance();
+  static SampleFilterConfig* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -2105,53 +2548,15 @@ inline void Config::set_allocated_darling(::PS::LM::DarlingConfig* darling) {
   }
 }
 
-// optional .PS.LM.SmoothConfig smooth = 17;
-inline bool Config::has_smooth() const {
-  return (_has_bits_[0] & 0x00001000u) != 0;
-}
-inline void Config::set_has_smooth() {
-  _has_bits_[0] |= 0x00001000u;
-}
-inline void Config::clear_has_smooth() {
-  _has_bits_[0] &= ~0x00001000u;
-}
-inline void Config::clear_smooth() {
-  if (smooth_ != NULL) smooth_->::PS::LM::SmoothConfig::Clear();
-  clear_has_smooth();
-}
-inline const ::PS::LM::SmoothConfig& Config::smooth() const {
-  return smooth_ != NULL ? *smooth_ : *default_instance_->smooth_;
-}
-inline ::PS::LM::SmoothConfig* Config::mutable_smooth() {
-  set_has_smooth();
-  if (smooth_ == NULL) smooth_ = new ::PS::LM::SmoothConfig;
-  return smooth_;
-}
-inline ::PS::LM::SmoothConfig* Config::release_smooth() {
-  clear_has_smooth();
-  ::PS::LM::SmoothConfig* temp = smooth_;
-  smooth_ = NULL;
-  return temp;
-}
-inline void Config::set_allocated_smooth(::PS::LM::SmoothConfig* smooth) {
-  delete smooth_;
-  smooth_ = smooth;
-  if (smooth) {
-    set_has_smooth();
-  } else {
-    clear_has_smooth();
-  }
-}
-
 // optional .PS.LM.FTRLConfig ftrl = 16;
 inline bool Config::has_ftrl() const {
-  return (_has_bits_[0] & 0x00002000u) != 0;
+  return (_has_bits_[0] & 0x00001000u) != 0;
 }
 inline void Config::set_has_ftrl() {
-  _has_bits_[0] |= 0x00002000u;
+  _has_bits_[0] |= 0x00001000u;
 }
 inline void Config::clear_has_ftrl() {
-  _has_bits_[0] &= ~0x00002000u;
+  _has_bits_[0] &= ~0x00001000u;
 }
 inline void Config::clear_ftrl() {
   if (ftrl_ != NULL) ftrl_->::PS::LM::FTRLConfig::Clear();
@@ -2178,6 +2583,82 @@ inline void Config::set_allocated_ftrl(::PS::LM::FTRLConfig* ftrl) {
     set_has_ftrl();
   } else {
     clear_has_ftrl();
+  }
+}
+
+// optional .PS.LM.LrL1Config lrl1 = 17;
+inline bool Config::has_lrl1() const {
+  return (_has_bits_[0] & 0x00002000u) != 0;
+}
+inline void Config::set_has_lrl1() {
+  _has_bits_[0] |= 0x00002000u;
+}
+inline void Config::clear_has_lrl1() {
+  _has_bits_[0] &= ~0x00002000u;
+}
+inline void Config::clear_lrl1() {
+  if (lrl1_ != NULL) lrl1_->::PS::LM::LrL1Config::Clear();
+  clear_has_lrl1();
+}
+inline const ::PS::LM::LrL1Config& Config::lrl1() const {
+  return lrl1_ != NULL ? *lrl1_ : *default_instance_->lrl1_;
+}
+inline ::PS::LM::LrL1Config* Config::mutable_lrl1() {
+  set_has_lrl1();
+  if (lrl1_ == NULL) lrl1_ = new ::PS::LM::LrL1Config;
+  return lrl1_;
+}
+inline ::PS::LM::LrL1Config* Config::release_lrl1() {
+  clear_has_lrl1();
+  ::PS::LM::LrL1Config* temp = lrl1_;
+  lrl1_ = NULL;
+  return temp;
+}
+inline void Config::set_allocated_lrl1(::PS::LM::LrL1Config* lrl1) {
+  delete lrl1_;
+  lrl1_ = lrl1;
+  if (lrl1) {
+    set_has_lrl1();
+  } else {
+    clear_has_lrl1();
+  }
+}
+
+// optional .PS.LM.SmoothConfig smooth = 18;
+inline bool Config::has_smooth() const {
+  return (_has_bits_[0] & 0x00004000u) != 0;
+}
+inline void Config::set_has_smooth() {
+  _has_bits_[0] |= 0x00004000u;
+}
+inline void Config::clear_has_smooth() {
+  _has_bits_[0] &= ~0x00004000u;
+}
+inline void Config::clear_smooth() {
+  if (smooth_ != NULL) smooth_->::PS::LM::SmoothConfig::Clear();
+  clear_has_smooth();
+}
+inline const ::PS::LM::SmoothConfig& Config::smooth() const {
+  return smooth_ != NULL ? *smooth_ : *default_instance_->smooth_;
+}
+inline ::PS::LM::SmoothConfig* Config::mutable_smooth() {
+  set_has_smooth();
+  if (smooth_ == NULL) smooth_ = new ::PS::LM::SmoothConfig;
+  return smooth_;
+}
+inline ::PS::LM::SmoothConfig* Config::release_smooth() {
+  clear_has_smooth();
+  ::PS::LM::SmoothConfig* temp = smooth_;
+  smooth_ = NULL;
+  return temp;
+}
+inline void Config::set_allocated_smooth(::PS::LM::SmoothConfig* smooth) {
+  delete smooth_;
+  smooth_ = smooth;
+  if (smooth) {
+    set_has_smooth();
+  } else {
+    clear_has_smooth();
   }
 }
 
@@ -2630,6 +3111,269 @@ inline double DarlingConfig::kkt_filter_threshold_ratio() const {
 inline void DarlingConfig::set_kkt_filter_threshold_ratio(double value) {
   set_has_kkt_filter_threshold_ratio();
   kkt_filter_threshold_ratio_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// LrL1Config
+
+// optional double delta_init_value = 1 [default = 1];
+inline bool LrL1Config::has_delta_init_value() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void LrL1Config::set_has_delta_init_value() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void LrL1Config::clear_has_delta_init_value() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void LrL1Config::clear_delta_init_value() {
+  delta_init_value_ = 1;
+  clear_has_delta_init_value();
+}
+inline double LrL1Config::delta_init_value() const {
+  return delta_init_value_;
+}
+inline void LrL1Config::set_delta_init_value(double value) {
+  set_has_delta_init_value();
+  delta_init_value_ = value;
+}
+
+// optional double delta_max_value = 2 [default = 5];
+inline bool LrL1Config::has_delta_max_value() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void LrL1Config::set_has_delta_max_value() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void LrL1Config::clear_has_delta_max_value() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void LrL1Config::clear_delta_max_value() {
+  delta_max_value_ = 5;
+  clear_has_delta_max_value();
+}
+inline double LrL1Config::delta_max_value() const {
+  return delta_max_value_;
+}
+inline void LrL1Config::set_delta_max_value(double value) {
+  set_has_delta_max_value();
+  delta_max_value_ = value;
+}
+
+// optional .PS.LM.RoundFilterConfig round_filter = 5;
+inline bool LrL1Config::has_round_filter() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void LrL1Config::set_has_round_filter() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void LrL1Config::clear_has_round_filter() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void LrL1Config::clear_round_filter() {
+  if (round_filter_ != NULL) round_filter_->::PS::LM::RoundFilterConfig::Clear();
+  clear_has_round_filter();
+}
+inline const ::PS::LM::RoundFilterConfig& LrL1Config::round_filter() const {
+  return round_filter_ != NULL ? *round_filter_ : *default_instance_->round_filter_;
+}
+inline ::PS::LM::RoundFilterConfig* LrL1Config::mutable_round_filter() {
+  set_has_round_filter();
+  if (round_filter_ == NULL) round_filter_ = new ::PS::LM::RoundFilterConfig;
+  return round_filter_;
+}
+inline ::PS::LM::RoundFilterConfig* LrL1Config::release_round_filter() {
+  clear_has_round_filter();
+  ::PS::LM::RoundFilterConfig* temp = round_filter_;
+  round_filter_ = NULL;
+  return temp;
+}
+inline void LrL1Config::set_allocated_round_filter(::PS::LM::RoundFilterConfig* round_filter) {
+  delete round_filter_;
+  round_filter_ = round_filter;
+  if (round_filter) {
+    set_has_round_filter();
+  } else {
+    clear_has_round_filter();
+  }
+}
+
+// optional .PS.LM.KKTFilterConfig kkt_filter = 6;
+inline bool LrL1Config::has_kkt_filter() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void LrL1Config::set_has_kkt_filter() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void LrL1Config::clear_has_kkt_filter() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void LrL1Config::clear_kkt_filter() {
+  if (kkt_filter_ != NULL) kkt_filter_->::PS::LM::KKTFilterConfig::Clear();
+  clear_has_kkt_filter();
+}
+inline const ::PS::LM::KKTFilterConfig& LrL1Config::kkt_filter() const {
+  return kkt_filter_ != NULL ? *kkt_filter_ : *default_instance_->kkt_filter_;
+}
+inline ::PS::LM::KKTFilterConfig* LrL1Config::mutable_kkt_filter() {
+  set_has_kkt_filter();
+  if (kkt_filter_ == NULL) kkt_filter_ = new ::PS::LM::KKTFilterConfig;
+  return kkt_filter_;
+}
+inline ::PS::LM::KKTFilterConfig* LrL1Config::release_kkt_filter() {
+  clear_has_kkt_filter();
+  ::PS::LM::KKTFilterConfig* temp = kkt_filter_;
+  kkt_filter_ = NULL;
+  return temp;
+}
+inline void LrL1Config::set_allocated_kkt_filter(::PS::LM::KKTFilterConfig* kkt_filter) {
+  delete kkt_filter_;
+  kkt_filter_ = kkt_filter;
+  if (kkt_filter) {
+    set_has_kkt_filter();
+  } else {
+    clear_has_kkt_filter();
+  }
+}
+
+// optional .PS.LM.SampleFilterConfig sample_filter = 7;
+inline bool LrL1Config::has_sample_filter() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void LrL1Config::set_has_sample_filter() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void LrL1Config::clear_has_sample_filter() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void LrL1Config::clear_sample_filter() {
+  if (sample_filter_ != NULL) sample_filter_->::PS::LM::SampleFilterConfig::Clear();
+  clear_has_sample_filter();
+}
+inline const ::PS::LM::SampleFilterConfig& LrL1Config::sample_filter() const {
+  return sample_filter_ != NULL ? *sample_filter_ : *default_instance_->sample_filter_;
+}
+inline ::PS::LM::SampleFilterConfig* LrL1Config::mutable_sample_filter() {
+  set_has_sample_filter();
+  if (sample_filter_ == NULL) sample_filter_ = new ::PS::LM::SampleFilterConfig;
+  return sample_filter_;
+}
+inline ::PS::LM::SampleFilterConfig* LrL1Config::release_sample_filter() {
+  clear_has_sample_filter();
+  ::PS::LM::SampleFilterConfig* temp = sample_filter_;
+  sample_filter_ = NULL;
+  return temp;
+}
+inline void LrL1Config::set_allocated_sample_filter(::PS::LM::SampleFilterConfig* sample_filter) {
+  delete sample_filter_;
+  sample_filter_ = sample_filter;
+  if (sample_filter) {
+    set_has_sample_filter();
+  } else {
+    clear_has_sample_filter();
+  }
+}
+
+// -------------------------------------------------------------------
+
+// RoundFilterConfig
+
+// required .PS.LM.RoundFilterConfig.Type type = 1;
+inline bool RoundFilterConfig::has_type() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void RoundFilterConfig::set_has_type() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void RoundFilterConfig::clear_has_type() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void RoundFilterConfig::clear_type() {
+  type_ = 1;
+  clear_has_type();
+}
+inline ::PS::LM::RoundFilterConfig_Type RoundFilterConfig::type() const {
+  return static_cast< ::PS::LM::RoundFilterConfig_Type >(type_);
+}
+inline void RoundFilterConfig::set_type(::PS::LM::RoundFilterConfig_Type value) {
+  assert(::PS::LM::RoundFilterConfig_Type_IsValid(value));
+  set_has_type();
+  type_ = value;
+}
+
+// optional int32 bit_num = 2;
+inline bool RoundFilterConfig::has_bit_num() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void RoundFilterConfig::set_has_bit_num() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void RoundFilterConfig::clear_has_bit_num() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void RoundFilterConfig::clear_bit_num() {
+  bit_num_ = 0;
+  clear_has_bit_num();
+}
+inline ::google::protobuf::int32 RoundFilterConfig::bit_num() const {
+  return bit_num_;
+}
+inline void RoundFilterConfig::set_bit_num(::google::protobuf::int32 value) {
+  set_has_bit_num();
+  bit_num_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// KKTFilterConfig
+
+// optional double kkt_filter_threshold_ratio = 1 [default = 10];
+inline bool KKTFilterConfig::has_kkt_filter_threshold_ratio() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void KKTFilterConfig::set_has_kkt_filter_threshold_ratio() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void KKTFilterConfig::clear_has_kkt_filter_threshold_ratio() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void KKTFilterConfig::clear_kkt_filter_threshold_ratio() {
+  kkt_filter_threshold_ratio_ = 10;
+  clear_has_kkt_filter_threshold_ratio();
+}
+inline double KKTFilterConfig::kkt_filter_threshold_ratio() const {
+  return kkt_filter_threshold_ratio_;
+}
+inline void KKTFilterConfig::set_kkt_filter_threshold_ratio(double value) {
+  set_has_kkt_filter_threshold_ratio();
+  kkt_filter_threshold_ratio_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// SampleFilterConfig
+
+// required float percent = 1;
+inline bool SampleFilterConfig::has_percent() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void SampleFilterConfig::set_has_percent() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void SampleFilterConfig::clear_has_percent() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void SampleFilterConfig::clear_percent() {
+  percent_ = 0;
+  clear_has_percent();
+}
+inline float SampleFilterConfig::percent() const {
+  return percent_;
+}
+inline void SampleFilterConfig::set_percent(float value) {
+  set_has_percent();
+  percent_ = value;
 }
 
 // -------------------------------------------------------------------
@@ -3312,6 +4056,10 @@ inline void AggGradLearnerArg::set_learning_rate(double value) {
 namespace google {
 namespace protobuf {
 
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::PS::LM::RoundFilterConfig_Type>() {
+  return ::PS::LM::RoundFilterConfig_Type_descriptor();
+}
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::PS::LM::LossConfig_Type>() {
   return ::PS::LM::LossConfig_Type_descriptor();

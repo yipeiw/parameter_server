@@ -1,5 +1,6 @@
 #pragma once
 #include "filter/filter.h"
+#include "linear_method/linear_method.pb.h"
 #include <math.h>
 #include <random>
 
@@ -11,14 +12,14 @@ class RoundingFilter : public Filter {
   public:
    RoundingFilter() {}
 
-   void init(RoundFilterConfig& conf_) {
+   void init(LM::RoundFilterConfig& conf_) {
      bit_num_ = max_bit_;
      std::vector<int> bit_num_ = {1,2,4,8,16,32};
      for(auto& bitNum : bit_num_){
        bit_choice_[bitNum] = std::pow(2, -bitNum);
      }
 
-     if (conf_.type() == RoundFilterConfig::FIXED) {
+     if (conf_.type() == LM::RoundFilterConfig::FIXED) {
        filter_type_ = Strategy::FIXED;
        set_bit(conf_.bit_num());
      } else {
