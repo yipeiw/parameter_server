@@ -74,6 +74,25 @@ inline bool RoundFilterConfig_Type_Parse(
   return ::google::protobuf::internal::ParseNamedEnum<RoundFilterConfig_Type>(
     RoundFilterConfig_Type_descriptor(), name, value);
 }
+enum RoundFilterConfig_RType {
+  RoundFilterConfig_RType_RANDOM = 1,
+  RoundFilterConfig_RType_HARD = 2
+};
+bool RoundFilterConfig_RType_IsValid(int value);
+const RoundFilterConfig_RType RoundFilterConfig_RType_RType_MIN = RoundFilterConfig_RType_RANDOM;
+const RoundFilterConfig_RType RoundFilterConfig_RType_RType_MAX = RoundFilterConfig_RType_HARD;
+const int RoundFilterConfig_RType_RType_ARRAYSIZE = RoundFilterConfig_RType_RType_MAX + 1;
+
+const ::google::protobuf::EnumDescriptor* RoundFilterConfig_RType_descriptor();
+inline const ::std::string& RoundFilterConfig_RType_Name(RoundFilterConfig_RType value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    RoundFilterConfig_RType_descriptor(), value);
+}
+inline bool RoundFilterConfig_RType_Parse(
+    const ::std::string& name, RoundFilterConfig_RType* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<RoundFilterConfig_RType>(
+    RoundFilterConfig_RType_descriptor(), name, value);
+}
 enum LossConfig_Type {
   LossConfig_Type_SQUARE = 1,
   LossConfig_Type_LOGIT = 2,
@@ -945,6 +964,30 @@ class RoundFilterConfig : public ::google::protobuf::Message {
     return RoundFilterConfig_Type_Parse(name, value);
   }
 
+  typedef RoundFilterConfig_RType RType;
+  static const RType RANDOM = RoundFilterConfig_RType_RANDOM;
+  static const RType HARD = RoundFilterConfig_RType_HARD;
+  static inline bool RType_IsValid(int value) {
+    return RoundFilterConfig_RType_IsValid(value);
+  }
+  static const RType RType_MIN =
+    RoundFilterConfig_RType_RType_MIN;
+  static const RType RType_MAX =
+    RoundFilterConfig_RType_RType_MAX;
+  static const int RType_ARRAYSIZE =
+    RoundFilterConfig_RType_RType_ARRAYSIZE;
+  static inline const ::google::protobuf::EnumDescriptor*
+  RType_descriptor() {
+    return RoundFilterConfig_RType_descriptor();
+  }
+  static inline const ::std::string& RType_Name(RType value) {
+    return RoundFilterConfig_RType_Name(value);
+  }
+  static inline bool RType_Parse(const ::std::string& name,
+      RType* value) {
+    return RoundFilterConfig_RType_Parse(name, value);
+  }
+
   // accessors -------------------------------------------------------
 
   // required .PS.LM.RoundFilterConfig.Type type = 1;
@@ -954,10 +997,17 @@ class RoundFilterConfig : public ::google::protobuf::Message {
   inline ::PS::LM::RoundFilterConfig_Type type() const;
   inline void set_type(::PS::LM::RoundFilterConfig_Type value);
 
-  // optional int32 bit_num = 2;
+  // required .PS.LM.RoundFilterConfig.RType rtype = 2;
+  inline bool has_rtype() const;
+  inline void clear_rtype();
+  static const int kRtypeFieldNumber = 2;
+  inline ::PS::LM::RoundFilterConfig_RType rtype() const;
+  inline void set_rtype(::PS::LM::RoundFilterConfig_RType value);
+
+  // optional int32 bit_num = 3;
   inline bool has_bit_num() const;
   inline void clear_bit_num();
-  static const int kBitNumFieldNumber = 2;
+  static const int kBitNumFieldNumber = 3;
   inline ::google::protobuf::int32 bit_num() const;
   inline void set_bit_num(::google::protobuf::int32 value);
 
@@ -965,16 +1015,19 @@ class RoundFilterConfig : public ::google::protobuf::Message {
  private:
   inline void set_has_type();
   inline void clear_has_type();
+  inline void set_has_rtype();
+  inline void clear_has_rtype();
   inline void set_has_bit_num();
   inline void clear_has_bit_num();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   int type_;
+  int rtype_;
   ::google::protobuf::int32 bit_num_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
 
   friend void  protobuf_AddDesc_linear_5fmethod_2flinear_5fmethod_2eproto();
   friend void protobuf_AssignDesc_linear_5fmethod_2flinear_5fmethod_2eproto();
@@ -1039,21 +1092,21 @@ class KKTFilterConfig : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // optional double kkt_filter_threshold_ratio = 1 [default = 10];
-  inline bool has_kkt_filter_threshold_ratio() const;
-  inline void clear_kkt_filter_threshold_ratio();
-  static const int kKktFilterThresholdRatioFieldNumber = 1;
-  inline double kkt_filter_threshold_ratio() const;
-  inline void set_kkt_filter_threshold_ratio(double value);
+  // optional double threshold_ratio = 1 [default = 10];
+  inline bool has_threshold_ratio() const;
+  inline void clear_threshold_ratio();
+  static const int kThresholdRatioFieldNumber = 1;
+  inline double threshold_ratio() const;
+  inline void set_threshold_ratio(double value);
 
   // @@protoc_insertion_point(class_scope:PS.LM.KKTFilterConfig)
  private:
-  inline void set_has_kkt_filter_threshold_ratio();
-  inline void clear_has_kkt_filter_threshold_ratio();
+  inline void set_has_threshold_ratio();
+  inline void clear_has_threshold_ratio();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  double kkt_filter_threshold_ratio_;
+  double threshold_ratio_;
 
   mutable int _cached_size_;
   ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
@@ -1678,6 +1731,20 @@ class Progress : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedField< double >*
       mutable_busy_time();
 
+  // optional double max_lr = 20 [default = 0];
+  inline bool has_max_lr() const;
+  inline void clear_max_lr();
+  static const int kMaxLrFieldNumber = 20;
+  inline double max_lr() const;
+  inline void set_max_lr(double value);
+
+  // optional double min_lr = 21 [default = 1000];
+  inline bool has_min_lr() const;
+  inline void clear_min_lr();
+  static const int kMinLrFieldNumber = 21;
+  inline double min_lr() const;
+  inline void set_min_lr(double value);
+
   // @@protoc_insertion_point(class_scope:PS.LM.Progress)
  private:
   inline void set_has_relative_objv();
@@ -1696,6 +1763,10 @@ class Progress : public ::google::protobuf::Message {
   inline void clear_has_num_ex_trained();
   inline void set_has_total_time();
   inline void clear_has_total_time();
+  inline void set_has_max_lr();
+  inline void clear_has_max_lr();
+  inline void set_has_min_lr();
+  inline void clear_has_min_lr();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -1711,9 +1782,11 @@ class Progress : public ::google::protobuf::Message {
   ::google::protobuf::RepeatedField< double > auc_;
   double total_time_;
   ::google::protobuf::RepeatedField< double > busy_time_;
+  double max_lr_;
+  double min_lr_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(12 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(14 + 31) / 32];
 
   friend void  protobuf_AddDesc_linear_5fmethod_2flinear_5fmethod_2eproto();
   friend void protobuf_AssignDesc_linear_5fmethod_2flinear_5fmethod_2eproto();
@@ -3302,15 +3375,38 @@ inline void RoundFilterConfig::set_type(::PS::LM::RoundFilterConfig_Type value) 
   type_ = value;
 }
 
-// optional int32 bit_num = 2;
-inline bool RoundFilterConfig::has_bit_num() const {
+// required .PS.LM.RoundFilterConfig.RType rtype = 2;
+inline bool RoundFilterConfig::has_rtype() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void RoundFilterConfig::set_has_bit_num() {
+inline void RoundFilterConfig::set_has_rtype() {
   _has_bits_[0] |= 0x00000002u;
 }
-inline void RoundFilterConfig::clear_has_bit_num() {
+inline void RoundFilterConfig::clear_has_rtype() {
   _has_bits_[0] &= ~0x00000002u;
+}
+inline void RoundFilterConfig::clear_rtype() {
+  rtype_ = 1;
+  clear_has_rtype();
+}
+inline ::PS::LM::RoundFilterConfig_RType RoundFilterConfig::rtype() const {
+  return static_cast< ::PS::LM::RoundFilterConfig_RType >(rtype_);
+}
+inline void RoundFilterConfig::set_rtype(::PS::LM::RoundFilterConfig_RType value) {
+  assert(::PS::LM::RoundFilterConfig_RType_IsValid(value));
+  set_has_rtype();
+  rtype_ = value;
+}
+
+// optional int32 bit_num = 3;
+inline bool RoundFilterConfig::has_bit_num() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void RoundFilterConfig::set_has_bit_num() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void RoundFilterConfig::clear_has_bit_num() {
+  _has_bits_[0] &= ~0x00000004u;
 }
 inline void RoundFilterConfig::clear_bit_num() {
   bit_num_ = 0;
@@ -3328,26 +3424,26 @@ inline void RoundFilterConfig::set_bit_num(::google::protobuf::int32 value) {
 
 // KKTFilterConfig
 
-// optional double kkt_filter_threshold_ratio = 1 [default = 10];
-inline bool KKTFilterConfig::has_kkt_filter_threshold_ratio() const {
+// optional double threshold_ratio = 1 [default = 10];
+inline bool KKTFilterConfig::has_threshold_ratio() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void KKTFilterConfig::set_has_kkt_filter_threshold_ratio() {
+inline void KKTFilterConfig::set_has_threshold_ratio() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void KKTFilterConfig::clear_has_kkt_filter_threshold_ratio() {
+inline void KKTFilterConfig::clear_has_threshold_ratio() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void KKTFilterConfig::clear_kkt_filter_threshold_ratio() {
-  kkt_filter_threshold_ratio_ = 10;
-  clear_has_kkt_filter_threshold_ratio();
+inline void KKTFilterConfig::clear_threshold_ratio() {
+  threshold_ratio_ = 10;
+  clear_has_threshold_ratio();
 }
-inline double KKTFilterConfig::kkt_filter_threshold_ratio() const {
-  return kkt_filter_threshold_ratio_;
+inline double KKTFilterConfig::threshold_ratio() const {
+  return threshold_ratio_;
 }
-inline void KKTFilterConfig::set_kkt_filter_threshold_ratio(double value) {
-  set_has_kkt_filter_threshold_ratio();
-  kkt_filter_threshold_ratio_ = value;
+inline void KKTFilterConfig::set_threshold_ratio(double value) {
+  set_has_threshold_ratio();
+  threshold_ratio_ = value;
 }
 
 // -------------------------------------------------------------------
@@ -3756,6 +3852,50 @@ Progress::mutable_busy_time() {
   return &busy_time_;
 }
 
+// optional double max_lr = 20 [default = 0];
+inline bool Progress::has_max_lr() const {
+  return (_has_bits_[0] & 0x00001000u) != 0;
+}
+inline void Progress::set_has_max_lr() {
+  _has_bits_[0] |= 0x00001000u;
+}
+inline void Progress::clear_has_max_lr() {
+  _has_bits_[0] &= ~0x00001000u;
+}
+inline void Progress::clear_max_lr() {
+  max_lr_ = 0;
+  clear_has_max_lr();
+}
+inline double Progress::max_lr() const {
+  return max_lr_;
+}
+inline void Progress::set_max_lr(double value) {
+  set_has_max_lr();
+  max_lr_ = value;
+}
+
+// optional double min_lr = 21 [default = 1000];
+inline bool Progress::has_min_lr() const {
+  return (_has_bits_[0] & 0x00002000u) != 0;
+}
+inline void Progress::set_has_min_lr() {
+  _has_bits_[0] |= 0x00002000u;
+}
+inline void Progress::clear_has_min_lr() {
+  _has_bits_[0] &= ~0x00002000u;
+}
+inline void Progress::clear_min_lr() {
+  min_lr_ = 1000;
+  clear_has_min_lr();
+}
+inline double Progress::min_lr() const {
+  return min_lr_;
+}
+inline void Progress::set_min_lr(double value) {
+  set_has_min_lr();
+  min_lr_ = value;
+}
+
 // -------------------------------------------------------------------
 
 // DataInfo
@@ -4059,6 +4199,10 @@ namespace protobuf {
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::PS::LM::RoundFilterConfig_Type>() {
   return ::PS::LM::RoundFilterConfig_Type_descriptor();
+}
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::PS::LM::RoundFilterConfig_RType>() {
+  return ::PS::LM::RoundFilterConfig_RType_descriptor();
 }
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::PS::LM::LossConfig_Type>() {

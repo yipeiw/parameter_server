@@ -10,10 +10,7 @@ void DarlinScheduler::runIteration() {
   CHECK_EQ(conf_.penalty().type(), PenaltyConfig::L1);
   auto sol_cf = conf_.solver();
   int tau = sol_cf.max_block_delay();
-  kkt_filter_threshold_ = 1e20; 
-  
-  float samplePercent = 0.1; //for sample_filter baseline test
-
+  kkt_filter_threshold_ = 1e20;
   bool reset_kkt_filter = false;
   bool random_blk_order = sol_cf.random_feature_block_order();
   if (!random_blk_order) {
@@ -27,14 +24,9 @@ void DarlinScheduler::runIteration() {
   // pick up a large enough time stamp to avoid any possible conflict
   int time = std::max(10000, pool->time() + (int)fea_grp_.size() * 10);
   const int first_time = time + 1;
- 
   for (int iter = 0; iter < max_iter; ++iter) {
     // pick up a updating order
     // TODO avoid some tau ...
-   
-    //randomround_filter_.adaptBit(iter);
-    //fprintf(stderr, "rounding bit num:%d\n", randomround_filter_.get_bit());
-
     auto order = blk_order_;
     if (random_blk_order) std::random_shuffle(order.begin(), order.end());
     if (iter == 0) order.insert(
@@ -44,13 +36,6 @@ void DarlinScheduler::runIteration() {
     for (int i = 0; i < order.size(); ++i) {
       Task update = newTask(Call::UPDATE_MODEL);
       auto cmd = set(&update);
-      //round filter
-      //cmd->set_roundfilter_bit_num(randomround_filter_.get_bit());
-
-      if (iter == 0 && i ==0 ) {
-        cmd->set_sample_filter_percent(samplePercent);
-      }
-
       // kkt filter
       if (i == 0) {
         cmd->set_kkt_filter_threshold(kkt_filter_threshold_);
@@ -90,6 +75,8 @@ void DarlinScheduler::runIteration() {
     double vio = g_progress_[iter].violation();
     double ratio = conf_.darling().kkt_filter_threshold_ratio();
     kkt_filter_threshold_ = vio / (double)g_train_info_.num_ex() * ratio;
+
+    LL << "r:"<<ratio<<" vio:" <<vio << " threshold:" << kkt_filter_threshold_;
 
     // check if finished
     double rel = g_progress_[iter].relative_objv();

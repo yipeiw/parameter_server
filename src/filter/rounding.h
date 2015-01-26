@@ -7,6 +7,7 @@
 namespace PS {
 
 enum Strategy {FIXED, ADAPT};
+enum RoundMethod {RANDOM, HARD};
 
 class RoundingFilter : public Filter {
   public:
@@ -14,7 +15,7 @@ class RoundingFilter : public Filter {
 
    void init(LM::RoundFilterConfig& conf_) {
      bit_num_ = max_bit_;
-     std::vector<int> bit_num_ = {1,2,4,8,16,32};
+     std::vector<int> bit_num_ = {1,5,13,32};
      for(auto& bitNum : bit_num_){
        bit_choice_[bitNum] = std::pow(2, -bitNum);
      }
@@ -25,6 +26,12 @@ class RoundingFilter : public Filter {
      } else {
        filter_type_ = Strategy::ADAPT;
      }
+     if (conf_.rtype()==LM::RoundFilterConfig::RANDOM) {
+       round_type_ = RoundMethod::RANDOM;
+     } else {
+       round_type_ = RoundMethod::HARD;
+     }
+
    }
  
    void updateParam(int iter) {
@@ -42,9 +49,10 @@ class RoundingFilter : public Filter {
    int get_bit() {
      return bit_num_;
    }
-   
-   void adaptBit(int iter){
-	float threshold = 1.0/(iter*iter);
+  
+   //resolution_t \leq r_t*eta, and \sum_t r_t = o(T) 
+   void adaptBit(int iter, double ratio=1.0){
+	float threshold = ratio * 1.0/(iter*iter);
 	for(auto& choice : bit_choice_){
 	  if(choice.second <= threshold){
 	    bit_num_ = choice.first;
@@ -52,6 +60,19 @@ class RoundingFilter : public Filter {
           }
 	}	
 	bit_num_ = max_bit_;
+   }
+
+   template <typename T> T apply(T& v) {
+     if (round_type_==RoundMethod::RANDOM) {
+       return randomizedRound(v);
+     } else {
+       return HardRound(v);
+     }
+   }
+
+   template <typename T> T HardRound(T& v) {
+     auto epsilon = std::pow(2, -bit_num_);
+     return (std::round(v/epsilon))*epsilon;
    }
 
    template <typename T> T randomizedRound(T& v) {
@@ -76,6 +97,7 @@ class RoundingFilter : public Filter {
     std::map<int, double> bit_choice_;
     const int max_bit_ = 32;
     Strategy filter_type_;
+    RoundMethod round_type_;
 };
 
 } // namespace PS

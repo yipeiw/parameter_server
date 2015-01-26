@@ -89,6 +89,9 @@ void Scheduler::mergeProgress(int iter) {
   p.set_relative_objv(iter==0 ? 1 : g_progress_[iter-1].objv(0)/p.objv(0) - 1);
   p.set_violation(std::max(p.violation(), recv.violation()));
   p.set_nnz_active_set(p.nnz_active_set() + recv.nnz_active_set());
+
+  p.set_max_lr(std::max(p.max_lr(), recv.max_lr()));
+  if (recv.min_lr()>0) p.set_min_lr(std::min(p.min_lr(), recv.min_lr()));
 }
 
 void Scheduler::mergeAUC(AUC* auc) {

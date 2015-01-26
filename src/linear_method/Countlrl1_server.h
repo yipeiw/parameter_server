@@ -15,6 +15,8 @@ class LrL1Server : public BatchServer, public LrL1Common {
 
   double max_lr_ = 0.0;
   double min_lr_ = 1.0;
+
+  std::unordered_map<int, SArray<int>> count_;
   //double kkt_filter_threshold_;
   //double violation_;
 };

@@ -88,13 +88,18 @@ message RoundFilterConfig {
     FIXED = 1;
     ADAPT = 2;
   }
-  
+  enum RType {
+    RANDOM = 1;
+    HARD = 2;
+  }
+ 
   required Type type = 1;
-  optional int32 bit_num = 2; 
+  required RType rtype = 2;
+  optional int32 bit_num = 3; 
 }
 
 message KKTFilterConfig {
-  optional double kkt_filter_threshold_ratio = 1 [default = 10];
+  optional double threshold_ratio = 1 [default = 10];
 }
 
 message SampleFilterConfig {
@@ -144,6 +149,9 @@ message Progress {
   // performance
   optional double total_time = 10;
   repeated double busy_time = 11;
+  
+  optional double max_lr = 20 [default = 0];
+  optional double min_lr = 21 [default = 1000];
 }
 
 message DataInfo {

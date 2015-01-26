@@ -1,0 +1,44 @@
+ps(15339): Operation not permitted
+ps(15340): Operation not permitted
+ps(15341): Operation not permitted
+ps(15342): Operation not permitted
+ps(15343): Operation not permitted
+I0121 18:02:04.063417  5555 postoffice.cc:67] Scheduler connected 1 servers and 4 workers
+I0121 18:02:04.070116  5555 scheduler.cc:43] Found 16 training files
+I0121 18:02:04.070147  5555 scheduler.cc:46] Assigned 16 files to 4 workers
+I0121 18:02:04.074858  5555 batch_scheduler.cc:38] Loaded 636061 examples in 0.002 sec
+I0121 18:02:06.741564  5555 batch_scheduler.cc:73] Preprocessing is finished in 2.666 sec
+I0121 18:02:06.741605  5555 batch_scheduler.cc:74] Features are partitioned into 292 blocks
+I0121 18:02:06.741616  5555 darlin_scheduler.cc:19] Train l_1 logistic regression by 0-delayed block coordinate descent
+     |        training        |  sparsity |      KKT filter     |    time (sec.)
+iter |  objective    relative |     |w|_0 | threshold  #activet |(app:min max) total
+ ----+------------------------+-----------+---------------------+-----------------
+   0 | 1.37862e+05  1.000e+00 |      3466 | 1.0e+20       42602 |   1.6   2.0   3.0
+E0121 18:02:09.772115  5555 darlin_scheduler.cc:79] r:100 vio:4182.57 threshold:0.657573
+   1 | 1.00416e+05  3.729e-01 |      1796 | 6.6e-01        3606 |   1.7   2.0   3.1
+E0121 18:02:12.900451  5555 darlin_scheduler.cc:79] r:100 vio:50.9972 threshold:0.00801766
+   2 | 9.30789e+04  7.882e-02 |      1530 | 8.0e-03        1881 |   1.4   1.7   2.7
+E0121 18:02:15.628041  5555 darlin_scheduler.cc:79] r:100 vio:35.5809 threshold:0.00559394
+   3 | 9.05714e+04  2.769e-02 |      1354 | 5.6e-03        1546 |   1.3   1.5   2.6
+E0121 18:02:18.221611  5555 darlin_scheduler.cc:79] r:100 vio:8.72027 threshold:0.00137098
+   4 | 8.94094e+04  1.300e-02 |      1231 | 1.4e-03        1363 |   1.3   1.5   2.6
+E0121 18:02:20.781342  5555 darlin_scheduler.cc:79] r:100 vio:2.83134 threshold:0.000445137
+   5 | 8.88722e+04  6.045e-03 |      1166 | 4.5e-04        1240 |   1.2   1.4   2.4
+E0121 18:02:23.214396  5555 darlin_scheduler.cc:79] r:100 vio:8.72451 threshold:0.00137165
+   6 | 8.86197e+04  2.849e-03 |      1141 | 1.4e-03        1171 |   1.2   1.3   2.4
+E0121 18:02:25.573684  5555 darlin_scheduler.cc:79] r:100 vio:0.693175 threshold:0.000108979
+   7 | 8.84976e+04  1.380e-03 |      1115 | 1.1e-04        1145 |   1.2   1.3   2.4
+E0121 18:02:27.944613  5555 darlin_scheduler.cc:79] r:100 vio:0.179894 threshold:2.82824e-05
+   8 | 8.84433e+04  6.137e-04 |      1109 | 2.8e-05        1120 |   1.2   1.4   2.4
+E0121 18:02:30.307040  5555 darlin_scheduler.cc:79] r:100 vio:1.71997 threshold:0.00027041
+   9 | 8.84175e+04  2.920e-04 |      1101 | 2.7e-04        1111 |   1.2   1.5   2.4
+E0121 18:02:32.756813  5555 darlin_scheduler.cc:79] r:100 vio:0.12534 threshold:1.97057e-05
+  10 | 8.84035e+04  1.579e-04 |      1096 | 2.0e-05        1105 |   1.2   1.3   2.4
+E0121 18:02:35.131067  5555 darlin_scheduler.cc:79] r:100 vio:0.26511 threshold:4.16799e-05
+  11 | 8.83969e+04  7.478e-05 |      1097 | 4.2e-05        1100 |   1.2   1.4   2.4
+E0121 18:02:37.489450  5555 darlin_scheduler.cc:79] r:100 vio:0.248509 threshold:3.907e-05
+  12 | 8.83940e+04  3.285e-05 |      1093 | 3.9e-05       42599 |   1.5   1.7   2.8
+E0121 18:02:40.254300  5555 darlin_scheduler.cc:79] r:100 vio:0 threshold:0
+I0121 18:02:40.254328  5555 darlin_scheduler.cc:85] Stopped: relative objective <= 0.0001
+I0121 18:02:40.256722  5604 batch_server.cc:26] S0 written the model to ../output/rcv1_batch_l1lr_S0
+I0121 18:02:40.258685  5555 app.cc:48] System stopped

@@ -1,0 +1,64 @@
+ps(15339): Operation not permitted
+ps(15340): Operation not permitted
+ps(15341): Operation not permitted
+ps(15342): Operation not permitted
+ps(15343): Operation not permitted
+I0121 18:02:56.936728  2327 postoffice.cc:67] Scheduler connected 1 servers and 4 workers
+E0121 18:02:56.938498  2327 lrl1_scheduler.cc:16] check round filter 0
+I0121 18:02:56.938916  2327 scheduler.cc:43] Found 16 training files
+I0121 18:02:56.938943  2327 scheduler.cc:46] Assigned 16 files to 4 workers
+I0121 18:02:56.945484  2327 batch_scheduler.cc:38] Loaded 636061 examples in 0.003 sec
+E0121 18:02:58.150249  2378 lrl1_server.cc:17] server kkt 1
+E0121 18:02:58.150424  2378 lrl1_server.cc:24] server round:0
+E0121 18:02:59.028165  2376 lrl1_worker.cc:31] worker round:0
+E0121 18:02:59.328876  2383 lrl1_worker.cc:31] worker round:0
+E0121 18:02:59.374881  2377 lrl1_worker.cc:31] worker round:0
+E0121 18:02:59.481775  2382 lrl1_worker.cc:31] worker round:0
+I0121 18:02:59.482270  2327 batch_scheduler.cc:73] Preprocessing is finished in 2.536 sec
+I0121 18:02:59.482317  2327 batch_scheduler.cc:74] Features are partitioned into 292 blocks
+I0121 18:02:59.482328  2327 lrl1_scheduler.cc:44] Train l_1 logistic regression by 0-delayed block coordinate descent
+     |        training        |  sparsity |      KKT filter     |    time (sec.)
+iter |  objective    relative |     |w|_0 | threshold  #activet |(app:min max) total
+ ----+------------------------+-----------+---------------------+-----------------
+   0 | 1.37862e+05  1.000e+00 |      3466 | 1.0e+20       42602 |   1.6   1.9   3.0
+E0121 18:03:02.439354  2327 kkt_filter.h:48] update kkt 0.657573 vio:4182.57
+E0121 18:03:02.439388  2327 lrl1_scheduler.cc:121] r:100 vio:4182.57 threshold:0.657573
+   1 | 9.84166e+04  4.008e-01 |      1741 | 6.6e-01        3616 |   1.7   2.0   3.1
+E0121 18:03:05.552301  2327 kkt_filter.h:48] update kkt 0.00831449 vio:52.8853
+E0121 18:03:05.552330  2327 lrl1_scheduler.cc:121] r:100 vio:52.8853 threshold:0.00831449
+   2 | 9.26128e+04  6.267e-02 |      1517 | 8.3e-03        1828 |   1.4   1.7   2.7
+E0121 18:03:08.245043  2327 kkt_filter.h:48] update kkt 0.00323136 vio:20.5534
+E0121 18:03:08.245071  2327 lrl1_scheduler.cc:121] r:100 vio:20.5534 threshold:0.00323136
+   3 | 9.03713e+04  2.480e-02 |      1335 | 3.2e-03        1533 |   1.3   1.5   2.5
+E0121 18:03:10.780621  2327 kkt_filter.h:48] update kkt 0.000716922 vio:4.56006
+E0121 18:03:10.780645  2327 lrl1_scheduler.cc:121] r:100 vio:4.56006 threshold:0.000716922
+   4 | 8.93194e+04  1.178e-02 |      1228 | 7.2e-04        1344 |   1.3   1.4   2.5
+E0121 18:03:13.280148  2327 kkt_filter.h:48] update kkt 0.000413086 vio:2.62748
+E0121 18:03:13.280174  2327 lrl1_scheduler.cc:121] r:100 vio:2.62748 threshold:0.000413086
+   5 | 8.88146e+04  5.684e-03 |      1163 | 4.1e-04        1239 |   1.3   1.4   2.5
+E0121 18:03:15.798070  2327 kkt_filter.h:48] update kkt 0.00133088 vio:8.4652
+E0121 18:03:15.798096  2327 lrl1_scheduler.cc:121] r:100 vio:8.4652 threshold:0.00133088
+   6 | 8.85852e+04  2.589e-03 |      1140 | 1.3e-03        1172 |   1.2   1.4   2.4
+E0121 18:03:18.185494  2327 kkt_filter.h:48] update kkt 5.48438e-05 vio:0.34884
+E0121 18:03:18.185520  2327 lrl1_scheduler.cc:121] r:100 vio:0.34884 threshold:5.48438e-05
+   7 | 8.84794e+04  1.196e-03 |      1114 | 5.5e-05        1144 |   1.0   1.3   2.2
+E0121 18:03:20.428076  2327 kkt_filter.h:48] update kkt 9.37055e-05 vio:0.596024
+E0121 18:03:20.428114  2327 lrl1_scheduler.cc:121] r:100 vio:0.596024 threshold:9.37055e-05
+   8 | 8.84361e+04  4.892e-04 |      1109 | 9.4e-05        1118 |   1.2   1.4   2.4
+E0121 18:03:22.801380  2327 kkt_filter.h:48] update kkt 9.89438e-05 vio:0.629343
+E0121 18:03:22.801410  2327 lrl1_scheduler.cc:121] r:100 vio:0.629343 threshold:9.89438e-05
+   9 | 8.84166e+04  2.213e-04 |      1098 | 9.9e-05        1111 |   1.1   1.2   2.3
+E0121 18:03:25.084028  2327 kkt_filter.h:48] update kkt 2.34879e-05 vio:0.149398
+E0121 18:03:25.084053  2327 lrl1_scheduler.cc:121] r:100 vio:0.149398 threshold:2.34879e-05
+  10 | 8.84061e+04  1.187e-04 |      1095 | 2.3e-05        1101 |   1.1   1.3   2.3
+E0121 18:03:27.356010  2327 kkt_filter.h:48] update kkt 2.95368e-05 vio:0.187872
+E0121 18:03:27.356040  2327 lrl1_scheduler.cc:121] r:100 vio:0.187872 threshold:2.95368e-05
+  11 | 8.84011e+04  5.585e-05 |      1091 | 3.0e-05        1097 |   1.1   1.3   2.3
+E0121 18:03:29.689064  2327 kkt_filter.h:48] update kkt 1.87987e-06 vio:0.0119571
+E0121 18:03:29.689092  2327 lrl1_scheduler.cc:121] r:100 vio:0.0119571 threshold:1.87987e-06
+  12 | 8.83989e+04  2.534e-05 |      1089 | 1.9e-06       42598 |   1.4   1.7   2.8
+E0121 18:03:32.474915  2327 kkt_filter.h:48] update kkt 2.79677e-05 vio:0.177892
+E0121 18:03:32.474942  2327 lrl1_scheduler.cc:121] r:100 vio:0.177892 threshold:2.79677e-05
+I0121 18:03:32.474951  2327 lrl1_scheduler.cc:134] Stopped: relative objective <= 0.0001
+I0121 18:03:32.477064  2378 batch_server.cc:26] S0 written the model to ../output/rcv1_batch_ml1lr_S0
+I0121 18:03:32.479271  2327 app.cc:48] System stopped

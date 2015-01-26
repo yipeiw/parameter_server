@@ -9,22 +9,11 @@ void DarlinServer::preprocessData(const MessagePtr& msg) {
     active_set_[grp].resize(n, true);
     delta_[grp].resize(n, conf_.darling().delta_init_value());
   }
-  //randomround_filter_.set_bit(32);
 }
 
 void DarlinServer::updateWeight(const MessagePtr& msg) {
   int time = msg->task.time() * k_time_ratio_;
   auto cmd = get(msg);
-  
-  //round filter update
-  //if (cmd.has_roundfilter_bit_num()) {
-    //randomround_filter_.set_bit(cmd.roundfilter_bit_num()); 
-  //}
-
-  if (cmd.has_sample_filter_percent()) {
-     sample_filter_.setPercent(cmd.sample_filter_percent()); 
-  }
-
   if (cmd.has_kkt_filter_threshold()) {
     kkt_filter_threshold_ = cmd.kkt_filter_threshold();
     violation_ = 0;
@@ -82,8 +71,8 @@ void DarlinServer::updateWeight(
       } else if (g_neg > 0) {
         vio = g_neg;
       } else if (g_pos > kkt_filter_threshold_ && g_neg < - kkt_filter_threshold_) {
-        //active_set.clear(k);
-        //kkt_filter_.mark(&w);
+        active_set.clear(k);
+        kkt_filter_.mark(&w);
         continue;
       }
     }
@@ -97,11 +86,7 @@ void DarlinServer::updateWeight(
     d = std::min(delta[k], std::max(-delta[k], d));
     delta[k] = newDelta(delta_max, d);
     w += d;
-
-    //w = randomround_filter_.randomizedRound(w); 
   }
-
-  sample_filter_.sample(value, range.begin(), range.end());
 }
 
 void DarlinServer::evaluateProgress(Progress* prog) {
