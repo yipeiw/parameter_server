@@ -1,0 +1,25 @@
+Delay4_l2lr_baseline_0.2.txt
+converge
+   9 | 7.12705e+04  8.937e-05 |     42602 |   0.8   1.0   1.3
+round 0; 
+delay blocks: 4
+Delay4_l2lr_baseline_0.25.txt
+converge
+   7 | 7.12703e+04  8.279e-05 |     42602 |   0.8   1.0   1.3
+round 0; 
+delay blocks: 4
+Delay4_l2lr_baseline_0.3.txt
+converge
+   8 | 7.12623e+04  7.257e-05 |     42602 |   0.8   1.0   1.3
+round 0; 
+delay blocks: 4
+Delay4_l2lr_baseline_0.35.txt
+converge
+  12 | 7.12611e+04  3.599e-05 |     42602 |   0.8   0.9   1.2
+round 0; 
+delay blocks: 4
+Delay4_l2lr_baseline_0.4.txt
+converge
+  14 | 7.12623e+04  5.459e-05 |     42602 |   0.8   1.0   1.3
+round 0; 
+delay blocks: 4

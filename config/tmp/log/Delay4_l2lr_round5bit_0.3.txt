@@ -1,0 +1,22 @@
+I0202 18:49:02.477059  2889 postoffice.cc:67] Scheduler connected 1 servers and 4 workers
+E0202 18:49:02.478950  2889 lrl2_scheduler.cc:15] use round filter 1
+I0202 18:49:02.479475  2889 scheduler.cc:43] Found 16 training files
+I0202 18:49:02.479499  2889 scheduler.cc:46] Assigned 16 files to 4 workers
+I0202 18:49:02.482084  2889 batch_scheduler.cc:38] Loaded 636061 examples in 0.001 sec
+I0202 18:49:04.861107  2889 batch_scheduler.cc:73] Preprocessing is finished in 2.378 sec
+I0202 18:49:04.861156  2889 batch_scheduler.cc:74] Features are partitioned into 292 blocks
+I0202 18:49:04.861173  2889 lrl2_scheduler.cc:45] Train l_1 logistic regression by 4-delayed block coordinate descent
+     |        training        |  sparsity |      Round filter     |    time (sec.)
+iter |  objective    relative |     |w|_0 | bitNum |(app:min max) total
+ ----+------------------------+-----------+------+-----------------
+   0 | 9.06520e+04  1.000e+00 |     33533 | 5 |   0.8   1.0   1.3
+   1 | 7.66483e+04  1.827e-01 |     31793 | 5 |   0.8   1.0   1.3
+   2 | 7.13203e+04  7.471e-02 |     32461 | 5 |   0.8   0.9   1.2
+   3 | 7.17623e+04  -6.159e-03 |     32114 | 5 |   0.8   0.9   1.2
+   4 | 7.13740e+04  5.440e-03 |     32174 | 5 |   0.7   0.9   1.2
+   5 | 7.14331e+04  -8.279e-04 |     32170 | 5 |   0.7   0.9   1.2
+   6 | 7.13808e+04  7.326e-04 |     32134 | 5 |   0.6   0.8   1.1
+   7 | 7.13778e+04  4.233e-05 |     32141 | 5 |   0.6   0.8   1.1
+I0202 18:49:14.399070  2889 lrl2_scheduler.cc:142] Stopped: relative objective <= 0.0001
+I0202 18:49:14.422680  2939 batch_server.cc:26] S0 written the model to ../output/rcv1_batch_l2lr_round5bit_S0
+I0202 18:49:14.432238  2889 app.cc:48] System stopped

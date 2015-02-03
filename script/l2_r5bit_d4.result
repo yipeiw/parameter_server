@@ -1,0 +1,25 @@
+Delay4_l2lr_round5bit_0.2.txt
+converge
+  10 | 7.13988e+04  1.079e-06 |     32303 | 5 |   0.5   0.7   1.0
+round 1; 
+delay blocks: 4
+Delay4_l2lr_round5bit_0.25.txt
+converge
+   7 | 7.13901e+04  4.818e-05 |     32132 | 5 |   0.6   0.8   1.1
+round 1; 
+delay blocks: 4
+Delay4_l2lr_round5bit_0.3.txt
+converge
+   7 | 7.13778e+04  4.233e-05 |     32141 | 5 |   0.6   0.8   1.1
+round 1; 
+delay blocks: 4
+Delay4_l2lr_round5bit_0.35.txt
+unconverge
+  19 | 7.13709e+04  -2.585e-04 |     31744 | 5 |   0.6   0.8   1.1
+round 1; 
+delay blocks: 4
+Delay4_l2lr_round5bit_0.4.txt
+unconverge
+  19 | 7.13818e+04  -4.773e-04 |     31670 | 5 |   0.6   0.8   1.2
+round 1; 
+delay blocks: 4

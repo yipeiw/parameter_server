@@ -1,0 +1,27 @@
+I0202 18:48:42.711712 24640 postoffice.cc:67] Scheduler connected 1 servers and 4 workers
+E0202 18:48:42.713981 24640 lrl2_scheduler.cc:15] use round filter 1
+I0202 18:48:42.715023 24640 scheduler.cc:43] Found 16 training files
+I0202 18:48:42.715049 24640 scheduler.cc:46] Assigned 16 files to 4 workers
+I0202 18:48:42.727952 24640 batch_scheduler.cc:38] Loaded 636061 examples in 0.01 sec
+I0202 18:48:45.392799 24640 batch_scheduler.cc:73] Preprocessing is finished in 2.664 sec
+I0202 18:48:45.392846 24640 batch_scheduler.cc:74] Features are partitioned into 292 blocks
+I0202 18:48:45.392861 24640 lrl2_scheduler.cc:45] Train l_1 logistic regression by 4-delayed block coordinate descent
+     |        training        |  sparsity |      Round filter     |    time (sec.)
+iter |  objective    relative |     |w|_0 | bitNum |(app:min max) total
+ ----+------------------------+-----------+------+-----------------
+   0 | 9.01553e+04  1.000e+00 |     42601 | 32 |   0.9   1.1   1.4
+   1 | 8.97017e+04  5.056e-03 |     34211 | 1 |   0.9   1.1   1.4
+   2 | 8.53225e+04  5.133e-02 |     34356 | 1 |   0.8   0.9   1.3
+   3 | 7.36667e+04  1.582e-01 |     39472 | 5 |   0.9   1.1   1.4
+   4 | 7.21830e+04  2.055e-02 |     37086 | 5 |   0.9   1.1   1.4
+   5 | 7.17518e+04  6.009e-03 |     35674 | 5 |   0.9   1.0   1.3
+   6 | 7.16091e+04  1.993e-03 |     35453 | 5 |   0.8   0.9   1.3
+   7 | 7.13629e+04  3.451e-03 |     42401 | 13 |   0.9   1.1   1.4
+   8 | 7.13273e+04  4.983e-04 |     42402 | 13 |   0.9   1.1   1.4
+   9 | 7.13001e+04  3.827e-04 |     42412 | 13 |   0.9   1.1   1.4
+  10 | 7.12880e+04  1.690e-04 |     42397 | 13 |   1.0   1.1   1.5
+  11 | 7.12767e+04  1.580e-04 |     42378 | 13 |   1.0   1.1   1.4
+  12 | 7.12713e+04  7.694e-05 |     42398 | 13 |   0.9   1.1   1.4
+I0202 18:49:03.394242 24640 lrl2_scheduler.cc:142] Stopped: relative objective <= 0.0001
+I0202 18:49:03.428422 24695 batch_server.cc:26] S0 written the model to ../output/rcv1_batch_l2lr_round_adapt_S0
+I0202 18:49:03.440177 24640 app.cc:48] System stopped

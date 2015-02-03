@@ -1,0 +1,50 @@
+l2lr_round_adapt_0.1.txt
+unconverge
+  19 | 7.12924e+04  1.051e-04 |     42227 | 13 |   0.7   0.9   1.5
+round 1; 
+delay blocks: 0
+l2lr_round_adapt_0.2.txt
+converge
+  12 | 7.12710e+04  7.691e-05 |     42399 | 13 |   0.7   0.9   1.5
+round 1; 
+delay blocks: 0
+l2lr_round_adapt_0.3.txt
+converge
+  11 | 7.12636e+04  4.598e-05 |     42404 | 13 |   0.7   0.9   1.5
+round 1; 
+delay blocks: 0
+l2lr_round_adapt_0.4.txt
+converge
+  18 | 7.12615e+04  1.913e-05 |     42451 | 13 |   0.7   0.9   1.5
+round 1; 
+delay blocks: 0
+l2lr_round_adapt_0.5.txt
+unconverge
+  19 | 7.53881e+04  -1.991e-02 |     42496 | 13 |   0.9   1.2   1.9
+round 1; 
+delay blocks: 0
+l2lr_round_adapt_0.6.txt
+unconverge
+  19 | 8.53592e+05  -6.671e-02 |     42170 | 13 |   0.7   0.9   1.6
+round 1; 
+delay blocks: 0
+l2lr_round_adapt_0.7.txt
+unconverge
+  19 | 1.07392e+06  -8.246e-02 |     42121 | 13 |   0.7   0.9   1.5
+round 1; 
+delay blocks: 0
+l2lr_round_adapt_0.8.txt
+unconverge
+  19 | 1.16877e+06  -1.349e-02 |     42119 | 13 |   0.7   0.9   1.5
+round 1; 
+delay blocks: 0
+l2lr_round_adapt_0.9.txt
+unconverge
+  19 | 1.18632e+06  -6.828e-03 |     42054 | 13 |   0.7   0.9   1.6
+round 1; 
+delay blocks: 0
+l2lr_round_adapt_1.0.txt
+unconverge
+  19 | 1.21747e+06  -1.279e-02 |     41556 | 13 |   0.7   0.9   1.5
+round 1; 
+delay blocks: 0

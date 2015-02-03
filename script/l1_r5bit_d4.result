@@ -1,0 +1,25 @@
+Delay4_l1lr_round_5bit_0.9.txt
+converge
+  10 | 8.83751e+04  8.957e-05 |      1142 | 1.00e+10 2.78315e-03 | 5 |   0.6   0.8   1.1
+kkt 0; round 1; 
+delay blocks: 4
+Delay4_l1lr_round_5bit_1.0.txt
+converge
+  10 | 8.83626e+04  9.621e-05 |      1133 | 1.00e+10 3.09717e-03 | 5 |   0.6   0.8   1.1
+kkt 0; round 1; 
+delay blocks: 4
+Delay4_l1lr_round_5bit_1.2.txt
+converge
+  10 | 8.83532e+04  1.207e-05 |      1125 | 1.00e+10 3.71337e-03 | 5 |   0.6   0.8   1.1
+kkt 0; round 1; 
+delay blocks: 4
+Delay4_l1lr_round_5bit_1.5.txt
+converge
+  11 | 8.83538e+04  1.438e-05 |      1119 | 1.00e+10 4.65116e-03 | 5 |   0.6   0.8   1.1
+kkt 0; round 1; 
+delay blocks: 4
+Delay4_l1lr_round_5bit_2.0.txt
+converge
+  14 | 8.83810e+04  4.408e-05 |      1112 | 1.00e+10 6.20696e-03 | 5 |   0.6   0.8   1.1
+kkt 0; round 1; 
+delay blocks: 4

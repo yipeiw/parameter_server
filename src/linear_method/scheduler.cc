@@ -92,6 +92,8 @@ void Scheduler::mergeProgress(int iter) {
 
   p.set_max_lr(std::max(p.max_lr(), recv.max_lr()));
   if (recv.min_lr()>0) p.set_min_lr(std::min(p.min_lr(), recv.min_lr()));
+
+  if (recv.delta_minimax()>0) p.set_delta_minimax(std::min(p.delta_minimax(), recv.delta_minimax()));
 }
 
 void Scheduler::mergeAUC(AUC* auc) {

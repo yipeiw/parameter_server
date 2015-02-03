@@ -1,0 +1,25 @@
+Delay4_l1lr_round_adapt_0.9.txt
+converge
+  12 | 8.83580e+04  2.792e-05 |      1139 | 1.00e+10 2.78670e-03 | 13 |   0.6   0.8   1.2
+kkt 0; round 1; 
+delay blocks: 4
+Delay4_l1lr_round_adapt_1.0.txt
+converge
+  10 | 8.83624e+04  6.467e-05 |      1144 | 1.00e+10 3.09465e-03 | 13 |   0.7   0.8   1.1
+kkt 0; round 1; 
+delay blocks: 4
+Delay4_l1lr_round_adapt_1.2.txt
+converge
+  10 | 8.83548e+04  1.129e-05 |      1135 | 1.00e+10 3.72292e-03 | 13 |   0.7   0.8   1.1
+kkt 0; round 1; 
+delay blocks: 4
+Delay4_l1lr_round_adapt_1.5.txt
+converge
+  12 | 8.83507e+04  3.963e-05 |      1127 | 1.00e+10 4.64600e-03 | 13 |   0.7   0.8   1.1
+kkt 0; round 1; 
+delay blocks: 4
+Delay4_l1lr_round_adapt_2.0.txt
+converge
+  11 | 8.84013e+04  3.760e-05 |      1118 | 1.00e+10 6.19969e-03 | 13 |   0.6   0.8   1.1
+kkt 0; round 1; 
+delay blocks: 4

@@ -1,0 +1,37 @@
+ps(4644): Operation not permitted
+ps(4646): Operation not permitted
+ps(4647): Operation not permitted
+ps(4648): Operation not permitted
+ps(4649): Operation not permitted
+I0202 18:18:23.955778  6580 postoffice.cc:67] Scheduler connected 1 servers and 4 workers
+E0202 18:18:23.957582  6580 lrl1_scheduler.cc:15] use round filter 1
+E0202 18:18:23.957594  6580 lrl1_scheduler.cc:21] use kkt_filter 1
+I0202 18:18:23.958030  6580 scheduler.cc:43] Found 16 training files
+I0202 18:18:23.958057  6580 scheduler.cc:46] Assigned 16 files to 4 workers
+I0202 18:18:23.960692  6580 batch_scheduler.cc:38] Loaded 636061 examples in 0.001 sec
+I0202 18:18:26.644345  6580 batch_scheduler.cc:73] Preprocessing is finished in 2.683 sec
+I0202 18:18:26.644389  6580 batch_scheduler.cc:74] Features are partitioned into 292 blocks
+I0202 18:18:26.644403  6580 lrl1_scheduler.cc:45] Train l_1 logistic regression by 0-delayed block coordinate descent
+     |        training        |  sparsity | Learning Rate |      KKT filter     |      Round filter     |    time (sec.)
+iter |  objective    relative |     |w|_0 | max   min  | threshold  #activet | bitNum |(app:min max) total
+ ----+------------------------+-----------+-----------+---------------------+------+-----------------
+   0 | 1.33501e+05  1.000e+00 |      4077 | 1.33e+06 1.57610e-03 | 1.0e+20       42602 | 32 |   0.8   1.0   1.8
+   1 | 1.05837e+05  2.614e-01 |      2030 | 1.33e+06 1.57610e-03 | 6.6e-01        4237 | 1 |   0.6   0.8   1.5
+   2 | 9.72081e+04  8.877e-02 |      1652 | 1.33e+06 1.57610e-03 | 1.3e-02        2288 | 1 |   0.4   0.5   1.2
+   3 | 9.30260e+04  4.496e-02 |      1608 | 1.33e+06 1.57610e-03 | 1.4e-02        1749 | 5 |   0.3   0.5   1.1
+   4 | 9.10450e+04  2.176e-02 |      1434 | 1.33e+06 1.57610e-03 | 9.8e-03        1616 | 5 |   0.3   0.5   1.1
+   5 | 8.99752e+04  1.189e-02 |      1326 | 1.33e+06 1.57610e-03 | 8.1e-04        1437 | 5 |   0.4   0.5   1.1
+   6 | 8.93646e+04  6.833e-03 |      1274 | 1.33e+06 1.57610e-03 | 3.1e-04        1327 | 5 |   0.4   0.5   1.1
+   7 | 8.89824e+04  4.295e-03 |      1229 | 1.33e+06 1.57610e-03 | 1.2e-04        1275 | 13 |   0.3   0.5   1.1
+   8 | 8.87660e+04  2.438e-03 |      1193 | 1.33e+06 1.57610e-03 | 1.3e-06        1230 | 13 |   0.3   0.5   1.1
+   9 | 8.86298e+04  1.536e-03 |      1167 | 1.33e+06 1.57610e-03 | 4.5e-06        1194 | 13 |   0.3   0.5   1.1
+  10 | 8.85433e+04  9.769e-04 |      1144 | 1.33e+06 1.57610e-03 | 1.0e-04        1168 | 13 |   0.3   0.4   1.1
+  11 | 8.84887e+04  6.175e-04 |      1127 | 1.33e+06 1.57610e-03 | 3.7e-06        1147 | 13 |   0.3   0.4   1.1
+  12 | 8.84532e+04  4.009e-04 |      1120 | 1.33e+06 1.57610e-03 | 1.9e-05        1128 | 13 |   0.3   0.4   1.1
+  13 | 8.84313e+04  2.485e-04 |      1115 | 1.33e+06 1.57610e-03 | 8.7e-06        1122 | 13 |   0.3   0.4   1.0
+  14 | 8.84167e+04  1.644e-04 |      1110 | 1.33e+06 1.57610e-03 | 4.2e-06        1118 | 13 |   0.3   0.4   1.0
+  15 | 8.84079e+04  9.988e-05 |      1110 | 1.33e+06 1.57610e-03 | 4.1e-05        1111 | 13 |   0.3   0.4   1.1
+  16 | 8.84020e+04  6.633e-05 |      1106 | 1.00e+10 1.57610e-03 | 1.1e-05       42601 | 13 |   0.6   0.7   1.4
+I0202 18:18:46.680384  6580 lrl1_scheduler.cc:134] Stopped: relative objective <= 0.0001
+I0202 18:18:46.682865  6629 batch_server.cc:26] S0 written the model to ../output/rcv1_batch_ml1lr_kkt_round_S0
+I0202 18:18:46.684948  6580 app.cc:48] System stopped

@@ -1,0 +1,34 @@
+I0202 18:12:02.921752  2876 postoffice.cc:67] Scheduler connected 1 servers and 4 workers
+E0202 18:12:02.923528  2876 lrl2_scheduler.cc:15] use round filter 0
+I0202 18:12:02.924352  2876 scheduler.cc:43] Found 16 training files
+I0202 18:12:02.924378  2876 scheduler.cc:46] Assigned 16 files to 4 workers
+I0202 18:12:02.926784  2876 batch_scheduler.cc:38] Loaded 636061 examples in 0.001 sec
+I0202 18:12:05.363365  2876 batch_scheduler.cc:73] Preprocessing is finished in 2.436 sec
+I0202 18:12:05.363418  2876 batch_scheduler.cc:74] Features are partitioned into 292 blocks
+I0202 18:12:05.363436  2876 lrl2_scheduler.cc:45] Train l_1 logistic regression by 0-delayed block coordinate descent
+     |        training        |  sparsity |    time (sec.)
+iter |  objective    relative |     |w|_0 |(app:min max) total
+ ----+------------------------+-----------+-----------------
+   0 | 1.41576e+05  1.000e+00 |     42602 |   0.8   1.2   1.9
+   1 | 3.22375e+05  -5.608e-01 |     42602 |   0.7   0.9   1.6
+   2 | 3.10169e+05  3.935e-02 |     42602 |   0.7   0.9   1.6
+   3 | 5.75499e+05  -4.610e-01 |     42602 |   0.6   0.9   1.6
+   4 | 6.12467e+05  -6.036e-02 |     42602 |   0.7   0.9   1.6
+   5 | 9.35742e+05  -3.455e-01 |     42602 |   0.7   0.9   1.6
+   6 | 9.78282e+05  -4.349e-02 |     42602 |   0.7   0.9   1.6
+   7 | 1.16470e+06  -1.601e-01 |     42602 |   0.6   0.9   1.6
+   8 | 1.10195e+06  5.694e-02 |     42602 |   0.6   0.9   1.5
+   9 | 1.22500e+06  -1.004e-01 |     42602 |   0.6   0.9   1.6
+  10 | 1.14461e+06  7.024e-02 |     42602 |   0.6   0.9   1.6
+  11 | 1.23811e+06  -7.552e-02 |     42602 |   0.6   0.9   1.6
+  12 | 1.15539e+06  7.159e-02 |     42602 |   0.7   0.9   1.6
+  13 | 1.24601e+06  -7.273e-02 |     42602 |   0.7   0.9   1.6
+  14 | 1.16032e+06  7.385e-02 |     42602 |   0.7   1.0   1.7
+  15 | 1.24658e+06  -6.920e-02 |     42602 |   0.7   1.0   1.6
+  16 | 1.16481e+06  7.020e-02 |     42602 |   0.7   0.9   1.6
+  17 | 1.24990e+06  -6.808e-02 |     42602 |   0.7   0.9   1.6
+  18 | 1.16713e+06  7.091e-02 |     42602 |   0.7   0.9   1.6
+  19 | 1.24569e+06  -6.307e-02 |     42602 |   0.7   0.9   1.6
+I0202 18:12:37.702842  2876 lrl2_scheduler.cc:150] Reached maximal 20 data passes
+I0202 18:12:37.731725  2925 batch_server.cc:26] S0 written the model to ../output/rcv1_batch_l2lr_S0
+I0202 18:12:37.743265  2876 app.cc:48] System stopped

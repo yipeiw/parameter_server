@@ -1,0 +1,40 @@
+ps(4644): Operation not permitted
+ps(4646): Operation not permitted
+ps(4647): Operation not permitted
+ps(4648): Operation not permitted
+ps(4649): Operation not permitted
+I0202 18:04:38.237051 24057 postoffice.cc:67] Scheduler connected 1 servers and 4 workers
+E0202 18:04:38.239151 24057 lrl1_scheduler.cc:15] use round filter 1
+E0202 18:04:38.239179 24057 lrl1_scheduler.cc:21] use kkt_filter 0
+I0202 18:04:38.239589 24057 scheduler.cc:43] Found 16 training files
+I0202 18:04:38.239616 24057 scheduler.cc:46] Assigned 16 files to 4 workers
+I0202 18:04:38.242243 24057 batch_scheduler.cc:38] Loaded 636061 examples in 0 sec
+I0202 18:04:40.968790 24057 batch_scheduler.cc:73] Preprocessing is finished in 2.726 sec
+I0202 18:04:40.968843 24057 batch_scheduler.cc:74] Features are partitioned into 292 blocks
+I0202 18:04:40.968864 24057 lrl1_scheduler.cc:45] Train l_1 logistic regression by 1-delayed block coordinate descent
+     |        training        |  sparsity | Learning Rate |      Round filter     |    time (sec.)
+iter |  objective    relative |     |w|_0 | max   min  | bitNum |(app:min max) total
+ ----+------------------------+-----------+-----------+------+-----------------
+   0 | 1.40652e+05  1.000e+00 |      4737 | 1.55e+05 7.12756e-04 | 32 |   0.8   0.9   1.3
+   1 | 1.13479e+05  2.395e-01 |      2452 | 1.00e+10 7.12756e-04 | 1 |   0.7   0.9   1.3
+   2 | 1.02958e+05  1.022e-01 |      1999 | 1.00e+10 7.12756e-04 | 1 |   0.6   0.8   1.2
+   3 | 9.70478e+04  6.090e-02 |      1960 | 1.00e+10 7.12756e-04 | 5 |   0.7   0.9   1.2
+   4 | 9.39584e+04  3.288e-02 |      1763 | 1.00e+10 7.12756e-04 | 5 |   0.7   0.9   1.3
+   5 | 9.21516e+04  1.961e-02 |      1582 | 1.00e+10 7.12756e-04 | 5 |   0.7   0.9   1.2
+   6 | 9.10003e+04  1.265e-02 |      1482 | 1.00e+10 7.12756e-04 | 5 |   0.7   0.9   1.3
+   7 | 9.02163e+04  8.691e-03 |      1407 | 1.00e+10 7.12756e-04 | 13 |   0.7   0.9   1.3
+   8 | 8.97081e+04  5.665e-03 |      1357 | 1.00e+10 7.12756e-04 | 13 |   0.6   0.9   1.2
+   9 | 8.93349e+04  4.178e-03 |      1317 | 1.00e+10 7.12756e-04 | 13 |   0.7   0.9   1.3
+  10 | 8.90756e+04  2.911e-03 |      1290 | 1.00e+10 7.12756e-04 | 13 |   0.7   0.9   1.3
+  11 | 8.88873e+04  2.118e-03 |      1257 | 1.00e+10 7.12756e-04 | 13 |   0.7   0.9   1.3
+  12 | 8.87467e+04  1.584e-03 |      1240 | 1.00e+10 7.12756e-04 | 13 |   0.7   0.9   1.3
+  13 | 8.86479e+04  1.115e-03 |      1219 | 1.00e+10 7.12756e-04 | 13 |   0.7   0.8   1.2
+  14 | 8.85711e+04  8.675e-04 |      1202 | 1.00e+10 7.12756e-04 | 13 |   0.7   0.8   1.2
+  15 | 8.85152e+04  6.315e-04 |      1183 | 1.00e+10 7.12756e-04 | 13 |   0.6   0.8   1.2
+  16 | 8.84728e+04  4.791e-04 |      1176 | 1.00e+10 7.12756e-04 | 13 |   0.6   0.8   1.2
+  17 | 8.84445e+04  3.201e-04 |      1166 | 1.00e+10 7.12756e-04 | 13 |   0.7   0.8   1.2
+  18 | 8.84218e+04  2.563e-04 |      1166 | 1.00e+10 7.12756e-04 | 13 |   0.7   0.8   1.2
+  19 | 8.84041e+04  2.003e-04 |      1161 | 1.00e+10 7.12756e-04 | 13 |   0.7   0.8   1.2
+I0202 18:05:05.869410 24057 lrl1_scheduler.cc:148] Reached maximal 20 data passes
+I0202 18:05:05.871990 24107 batch_server.cc:26] S0 written the model to ../output/rcv1_batch_ml1lr_roundtadapt_S0
+I0202 18:05:05.874091 24057 app.cc:48] System stopped

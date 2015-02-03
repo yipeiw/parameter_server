@@ -1,0 +1,31 @@
+I0202 18:08:45.204071  4025 postoffice.cc:67] Scheduler connected 1 servers and 4 workers
+E0202 18:08:45.205929  4025 lrl2_scheduler.cc:15] use round filter 0
+I0202 18:08:45.206954  4025 scheduler.cc:43] Found 16 training files
+I0202 18:08:45.206980  4025 scheduler.cc:46] Assigned 16 files to 4 workers
+I0202 18:08:45.209545  4025 batch_scheduler.cc:38] Loaded 636061 examples in 0 sec
+I0202 18:08:47.577580  4025 batch_scheduler.cc:73] Preprocessing is finished in 2.367 sec
+I0202 18:08:47.577636  4025 batch_scheduler.cc:74] Features are partitioned into 292 blocks
+I0202 18:08:47.577658  4025 lrl2_scheduler.cc:45] Train l_1 logistic regression by 0-delayed block coordinate descent
+     |        training        |  sparsity |    time (sec.)
+iter |  objective    relative |     |w|_0 |(app:min max) total
+ ----+------------------------+-----------+-----------------
+   0 | 9.36260e+04  1.000e+00 |     42602 |   0.7   0.9   1.6
+   1 | 8.75543e+04  6.935e-02 |     42602 |   0.7   1.0   1.6
+   2 | 7.08576e+04  2.356e-01 |     42602 |   0.7   1.0   1.6
+   3 | 7.35601e+04  -3.674e-02 |     42602 |   0.7   1.0   1.6
+   4 | 7.07990e+04  3.900e-02 |     42602 |   0.8   0.9   1.6
+   5 | 7.17540e+04  -1.331e-02 |     42602 |   0.8   1.0   1.6
+   6 | 7.10960e+04  9.255e-03 |     42602 |   0.7   0.9   1.5
+   7 | 7.13965e+04  -4.208e-03 |     42602 |   0.7   0.9   1.5
+   8 | 7.11918e+04  2.875e-03 |     42602 |   0.7   0.9   1.5
+   9 | 7.13162e+04  -1.744e-03 |     42602 |   0.9   1.2   1.9
+  10 | 7.12421e+04  1.040e-03 |     42602 |   0.6   0.9   1.6
+  11 | 7.12801e+04  -5.325e-04 |     42602 |   0.6   0.9   1.6
+  12 | 7.12555e+04  3.452e-04 |     42602 |   0.6   0.9   1.6
+  13 | 7.12722e+04  -2.342e-04 |     42602 |   0.6   0.9   1.6
+  14 | 7.12576e+04  2.048e-04 |     42602 |   0.6   0.9   1.5
+  15 | 7.12653e+04  -1.085e-04 |     42602 |   0.6   0.9   1.5
+  16 | 7.12592e+04  8.498e-05 |     42602 |   0.6   0.9   1.5
+I0202 18:09:14.525274  4025 lrl2_scheduler.cc:142] Stopped: relative objective <= 0.0001
+I0202 18:09:14.559564  4082 batch_server.cc:26] S0 written the model to ../output/rcv1_batch_l2lr_S0
+I0202 18:09:14.570543  4025 app.cc:48] System stopped

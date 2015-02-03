@@ -118,7 +118,7 @@ void LrL1Server::updateWeight(
     delta[k] = newDelta(delta_max, d);
     w += d;
 
-    double = fabs(1.0/u);
+    double lr = fabs(1.0/u);
     max_lr_ = std::max(max_lr_, lr);
     min_lr_ = std::min(min_lr_, lr);
 

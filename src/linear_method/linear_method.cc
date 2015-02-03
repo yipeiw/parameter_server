@@ -5,13 +5,17 @@
 #include "proto/instance.pb.h"
 #include "base/io.h"
 
-//#include "linear_method/smooth_worker.h"
-//#include "linear_method/smooth_server.h"
-//#include "linear_method/smooth_scheduler.h"
+#include "linear_method/lrl2_worker.h"
+#include "linear_method/lrl2_server.h"
+#include "linear_method/lrl2_scheduler.h"
 
 #include "linear_method/lrl1_worker.h"
 #include "linear_method/lrl1_server.h"
 #include "linear_method/lrl1_scheduler.h"
+
+#include "linear_method/countlrl1_worker.h"
+#include "linear_method/countlrl1_server.h"
+#include "linear_method/countlrl1_scheduler.h"
 
 #include "linear_method/darlin_worker.h"
 #include "linear_method/darlin_server.h"
@@ -52,16 +56,24 @@ AppPtr LinearMethod::create(const Config& conf) {
       } else if (my_role == Node::SERVER) {
         return AppPtr(new LrL1Server());
       }
-    } /*else if (conf.has_smooth()) {
-      // smooth for l2 norm, passing update direclty
+    } else if (conf.has_countlrl1()) {
       if (my_role == Node::SCHEDULER) {
-        return AppPtr(new SmoothScheduler());
+        return AppPtr(new CountLrL1Scheduler());
       } else if (my_role == Node::WORKER) {
-        return AppPtr(new SmoothWorker());
+        return AppPtr(new CountLrL1Worker());
       } else if (my_role == Node::SERVER) {
-        return AppPtr(new SmoothServer());
+        return AppPtr(new CountLrL1Server());
       }
-    }*/ else  {
+    } else if (conf.has_lrl2()) {
+      //passing update direclty
+      if (my_role == Node::SCHEDULER) {
+        return AppPtr(new LrL2Scheduler());
+      } else if (my_role == Node::WORKER) {
+        return AppPtr(new LrL2Worker());
+      } else if (my_role == Node::SERVER) {
+        return AppPtr(new LrL2Server());
+      }
+    } else  {
       // general batch solver
       if (my_role == Node::SCHEDULER) {
         return AppPtr(new BatchScheduler());

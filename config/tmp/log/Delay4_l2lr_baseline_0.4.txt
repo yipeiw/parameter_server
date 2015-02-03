@@ -1,0 +1,29 @@
+I0202 18:49:27.274863 16783 postoffice.cc:67] Scheduler connected 1 servers and 4 workers
+E0202 18:49:27.276757 16783 lrl2_scheduler.cc:15] use round filter 0
+I0202 18:49:27.277838 16783 scheduler.cc:43] Found 16 training files
+I0202 18:49:27.277865 16783 scheduler.cc:46] Assigned 16 files to 4 workers
+I0202 18:49:27.280822 16783 batch_scheduler.cc:38] Loaded 636061 examples in 0.001 sec
+I0202 18:49:29.659011 16783 batch_scheduler.cc:73] Preprocessing is finished in 2.378 sec
+I0202 18:49:29.659055 16783 batch_scheduler.cc:74] Features are partitioned into 292 blocks
+I0202 18:49:29.659072 16783 lrl2_scheduler.cc:45] Train l_1 logistic regression by 4-delayed block coordinate descent
+     |        training        |  sparsity |    time (sec.)
+iter |  objective    relative |     |w|_0 |(app:min max) total
+ ----+------------------------+-----------+-----------------
+   0 | 9.62032e+04  1.000e+00 |     42601 |   0.7   1.0   1.3
+   1 | 8.85778e+04  8.609e-02 |     42602 |   0.8   1.0   1.3
+   2 | 7.10597e+04  2.465e-01 |     42602 |   0.8   1.0   1.3
+   3 | 7.37134e+04  -3.600e-02 |     42602 |   0.8   1.0   1.3
+   4 | 7.07688e+04  4.161e-02 |     42602 |   0.8   1.0   1.3
+   5 | 7.18110e+04  -1.451e-02 |     42602 |   0.7   0.9   1.2
+   6 | 7.11577e+04  9.180e-03 |     42602 |   0.8   0.9   1.2
+   7 | 7.14196e+04  -3.666e-03 |     42602 |   0.8   1.0   1.3
+   8 | 7.12084e+04  2.966e-03 |     42602 |   0.8   0.9   1.3
+   9 | 7.13064e+04  -1.375e-03 |     42602 |   0.8   1.0   1.3
+  10 | 7.12514e+04  7.726e-04 |     42602 |   0.7   1.0   1.3
+  11 | 7.12815e+04  -4.225e-04 |     42602 |   0.8   0.9   1.2
+  12 | 7.12587e+04  3.198e-04 |     42602 |   0.7   0.9   1.3
+  13 | 7.12662e+04  -1.054e-04 |     42602 |   0.8   1.0   1.3
+  14 | 7.12623e+04  5.459e-05 |     42602 |   0.8   1.0   1.3
+I0202 18:49:48.715132 16783 lrl2_scheduler.cc:142] Stopped: relative objective <= 0.0001
+I0202 18:49:48.749142 16832 batch_server.cc:26] S0 written the model to ../output/rcv1_batch_l2lr_S0
+I0202 18:49:48.760705 16783 app.cc:48] System stopped

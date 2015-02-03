@@ -1,0 +1,50 @@
+l2lr_baseline_0.1.txt
+converge
+  18 | 7.12808e+04  9.288e-05 |     42602 |   0.7   0.9   1.5
+round 0; 
+delay blocks: 0
+l2lr_baseline_0.2.txt
+converge
+   9 | 7.12708e+04  6.191e-05 |     42602 |   0.7   0.9   1.5
+round 0; 
+delay blocks: 0
+l2lr_baseline_0.3.txt
+converge
+   8 | 7.12620e+04  8.426e-05 |     42602 |   0.7   0.9   1.5
+round 0; 
+delay blocks: 0
+l2lr_baseline_0.4.txt
+converge
+  16 | 7.12592e+04  8.498e-05 |     42602 |   0.6   0.9   1.5
+round 0; 
+delay blocks: 0
+l2lr_baseline_0.5.txt
+unconverge
+  19 | 7.47018e+04  -2.292e-02 |     42602 |   0.6   0.9   1.5
+round 0; 
+delay blocks: 0
+l2lr_baseline_0.6.txt
+unconverge
+  19 | 8.77230e+05  -7.774e-02 |     42602 |   0.7   0.9   1.5
+round 0; 
+delay blocks: 0
+l2lr_baseline_0.7.txt
+unconverge
+  19 | 1.06502e+06  -6.483e-02 |     42602 |   0.7   0.9   1.6
+round 0; 
+delay blocks: 0
+l2lr_baseline_0.8.txt
+unconverge
+  19 | 1.20771e+06  -7.661e-02 |     42602 |   0.7   0.9   1.5
+round 0; 
+delay blocks: 0
+l2lr_baseline_0.9.txt
+unconverge
+  19 | 1.24607e+06  -8.203e-02 |     42602 |   0.7   0.9   1.6
+round 0; 
+delay blocks: 0
+l2lr_baseline_1.0.txt
+unconverge
+  19 | 1.24569e+06  -6.307e-02 |     42602 |   0.7   0.9   1.6
+round 0; 
+delay blocks: 0

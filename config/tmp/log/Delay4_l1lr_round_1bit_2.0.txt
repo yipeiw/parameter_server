@@ -1,0 +1,25 @@
+I0202 18:47:04.208128  9923 postoffice.cc:67] Scheduler connected 1 servers and 4 workers
+E0202 18:47:04.210206  9923 lrl1_scheduler.cc:15] use round filter 1
+E0202 18:47:04.210224  9923 lrl1_scheduler.cc:21] use kkt_filter 0
+I0202 18:47:04.211141  9923 scheduler.cc:43] Found 16 training files
+I0202 18:47:04.211168  9923 scheduler.cc:46] Assigned 16 files to 4 workers
+I0202 18:47:04.213758  9923 batch_scheduler.cc:38] Loaded 636061 examples in 0 sec
+I0202 18:47:07.134609  9923 batch_scheduler.cc:73] Preprocessing is finished in 2.92 sec
+I0202 18:47:07.134647  9923 batch_scheduler.cc:74] Features are partitioned into 292 blocks
+I0202 18:47:07.134663  9923 lrl1_scheduler.cc:45] Train l_1 logistic regression by 4-delayed block coordinate descent
+     |        training        |  sparsity | Learning Rate |      Round filter     |    time (sec.)
+iter |  objective    relative |     |w|_0 | max   min  | bitNum |(app:min max) total
+ ----+------------------------+-----------+-----------+------+-----------------
+   0 | 1.63397e+05  1.000e+00 |      2927 | 1.00e+10 6.19195e-03 | 1 |   0.8   1.0   1.3
+   1 | 9.93597e+04  6.445e-01 |      1176 | 1.00e+10 6.19195e-03 | 1 |   0.9   1.0   1.3
+   2 | 9.31162e+04  6.705e-02 |      1172 | 1.00e+10 6.19195e-03 | 1 |   0.8   1.0   1.3
+   3 | 9.06512e+04  2.719e-02 |      1121 | 1.00e+10 6.19195e-03 | 1 |   0.8   0.9   1.3
+   4 | 8.96033e+04  1.169e-02 |      1105 | 1.00e+10 6.19195e-03 | 1 |   0.8   0.9   1.2
+   5 | 8.89332e+04  7.535e-03 |      1046 | 1.00e+10 6.19195e-03 | 1 |   0.8   1.0   1.3
+   6 | 8.86890e+04  2.753e-03 |      1038 | 1.00e+10 6.19195e-03 | 1 |   0.7   0.9   1.2
+   7 | 8.86070e+04  9.258e-04 |      1023 | 1.00e+10 6.19195e-03 | 1 |   0.8   0.9   1.2
+   8 | 8.85647e+04  4.779e-04 |      1039 | 1.00e+10 6.19195e-03 | 1 |   0.7   0.9   1.2
+   9 | 8.85586e+04  6.871e-05 |      1029 | 1.00e+10 6.19195e-03 | 1 |   0.7   0.9   1.2
+I0202 18:47:19.592725  9923 lrl1_scheduler.cc:140] Stopped: relative objective <= 0.0001
+I0202 18:47:19.594877  9978 batch_server.cc:26] S0 written the model to ../output/rcv1_batch_ml1lr_r1bit_S0
+I0202 18:47:19.596608  9923 app.cc:48] System stopped

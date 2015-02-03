@@ -20,6 +20,8 @@ message Config {
   optional FTRLConfig ftrl = 16;
   optional LrL1Config lrl1 = 17;
   optional SmoothConfig smooth= 18;
+  optional LrL1Config countlrl1 = 19;
+  optional LrL2Config lrl2 = 20;
 }
 
 message SolverConfig {
@@ -83,6 +85,13 @@ message LrL1Config {
   optional SampleFilterConfig sample_filter = 7;
 }
 
+message LrL2Config {
+  optional double delta_init_value = 1 [default = 1];
+  optional double delta_max_value = 2 [default = 5];
+  optional RoundFilterConfig round_filter = 5;
+  optional SampleFilterConfig sample_filter = 7;
+}
+
 message RoundFilterConfig {
   enum Type {
     FIXED = 1;
@@ -103,7 +112,8 @@ message KKTFilterConfig {
 }
 
 message SampleFilterConfig {
-  required float percent = 1;
+  optional float percent = 1;
+  required double threshold = 2 [default = 0.0];
 }
 
 message SmoothConfig {
@@ -152,6 +162,7 @@ message Progress {
   
   optional double max_lr = 20 [default = 0];
   optional double min_lr = 21 [default = 1000];
+  optional double delta_minimax = 22 [default = 0];
 }
 
 message DataInfo {
@@ -180,7 +191,7 @@ message Call {
 
   optional int32 roundfilter_bit_num = 6;
 
-  optional float sample_filter_percent = 7;
+  optional double sample_threshold = 7;
 
   repeated int32 fea_grp = 8;
   optional bool hit_cache = 9;
