@@ -14,8 +14,8 @@ class RoundingFilter : public Filter {
    RoundingFilter() {}
 
    void init(LM::RoundFilterConfig& conf_) {
-     bit_num_ = max_bit_;
-     std::vector<int> bit_num_ = {1,5,13,32};
+     bit_num_ = 3;
+     std::vector<int> bit_num_ = {3,11};
      for(auto& bitNum : bit_num_){
        bit_choice_[bitNum] = std::pow(2, -bitNum);
      }
@@ -42,13 +42,8 @@ class RoundingFilter : public Filter {
      }
    }
  
-   void set_bit(int bit) {
-     bit_num_ = bit;
-   }
-
-   int get_bit() {
-     return bit_num_;
-   }
+   void set_bit(int bit) {  bit_num_ = bit; }
+   int get_bit() {  return bit_num_;  }
   
    //resolution_t \leq r_t*eta, and \sum_t r_t = o(T) 
    void adaptBit(int iter, double ratio=1.0){
@@ -62,29 +57,45 @@ class RoundingFilter : public Filter {
 	bit_num_ = max_bit_;
    }
 
-   template <typename T> T apply(T& v) {
+   template <typename T>
+   void apply(SArray<T> Val, SArray<int16_t> Filter_Val) {
      if (round_type_==RoundMethod::RANDOM) {
-       return randomizedRound(v);
-     } else {
-       return HardRound(v);
+       for (int i=0; i < Val.size(); i++) {
+         Filter_Val[i] = randomizedRound(Val[i]);
+       }
+     } else { //to do
+       return;
+     }
+   }
+   template <typename T, typename V>
+   void decode(SArray<V> Filter_Val, SArray<T>& Val) {
+     for(int i=0; i < Filter_Val.size(); i++) {
+       Val[i] = Filter_Val[i]*std::pow(2, -bit_num_);
      }
    }
 
-   template <typename T> T HardRound(T& v) {
+   template <typename T> int16_t HardRound(T& v) {
      auto epsilon = std::pow(2, -bit_num_);
-     return (std::round(v/epsilon))*epsilon;
+     return static_cast<int16_t> (std::round(v/epsilon));
    }
 
-   template <typename T> T randomizedRound(T& v) {
+   template <typename T> int16_t randomizedRound(T& v) {
     auto epsilon = std::pow(2, -bit_num_);
-    auto upper = (std::ceil(v/epsilon))*epsilon;
-    auto lower = (std::floor(v/epsilon))*epsilon;
-    auto threshold = v-lower;
-
-    std::default_random_engine generator;
+    
+    //auto upper = (std::ceil(v/epsilon))*epsilon;
+    //auto lower = (std::floor(v/epsilon))*epsilon;
+    //auto threshold = v-lower;
+    auto upper = static_cast<int16_t>(std::ceil(v/epsilon));
+    auto lower = static_cast<int16_t>(std::floor(v/epsilon));
+    auto threshold = v/epsilon - lower;
+    //LL<<"up:"<<upper<<"; lo:"<<lower << ", threshold " << threshold;
+    
+    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+    std::default_random_engine generator(seed);
     std::uniform_real_distribution<float> distribution(0.0, 1.0);
     auto randNum = distribution(generator);
 
+    //LL<<"rand "<<randNum;
     if (randNum < threshold) {
       return upper;
     } else {
@@ -95,7 +106,7 @@ class RoundingFilter : public Filter {
   private:
     int bit_num_;
     std::map<int, double> bit_choice_;
-    const int max_bit_ = 32;
+    const int max_bit_ = 11; //should be max(bit_choice)
     Strategy filter_type_;
     RoundMethod round_type_;
 };
