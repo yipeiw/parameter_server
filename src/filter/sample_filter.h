@@ -1,6 +1,6 @@
 #pragma once
 #include "filter/sparse_filter.h"
-#include "filter/sample.h"
+#include "filter/weight_sensitive_sample.h"
 #include "linear_method/linear_method.pb.h"
 
 #include <random>
