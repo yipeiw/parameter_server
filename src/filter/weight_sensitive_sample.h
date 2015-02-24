@@ -16,20 +16,19 @@ std::random_device rd;
 
 template <typename V> 
 void WeightSensitiveSample(SArray<V>& value, int K) {
-    if (value.size()==K) return;
+    CHECK_GT(value.size(), K);
     if (value.size()==0) {
-      for(int i=0; i<value.size(); i++) {value[i]=0; }
+      for(int i=0; i<value.size(); i++) { value[i]=0; }
+      return;
     }
-
+    /*
     SArray<V> sort_arr(value.size(), 0.0);
     for(int i=0; i< value.size(); i++) {
 	sort_arr[i] = fabs(value[i]);
     }
-    auto threshold = findKthLargest(sort_arr, 0, value.size()-1, K);
-    //LL << "the K th largest value " << threshold << "\n";
-    //LL << "sorted_arr "<<sort_arr;
+    auto threshold = findKthLargest(sort_arr, 0, value.size()-1, K);*/
     
-    //auto threshold = ApproximateKth(value, K);
+    auto threshold = ApproximateKth(value, K);
 
     //std::uniform_real_distribution<float> distribution(0.0, 1.0); 
     for(int i = 0; i < value.size(); i++) {
@@ -43,40 +42,35 @@ void WeightSensitiveSample(SArray<V>& value, int K) {
 
 template <typename V>
 V ApproximateKth(SArray<V>& value, int K) {
-  V max_val = value[0], min_val = value[0];
+  V max_val = fabs(value[0]), min_val = max_val;
   for (int i=1; i < value.size(); ++i) {
-    V cur_val = value[i];
+    V cur_val = fabs(value[i]);
     if (cur_val > max_val) max_val = cur_val;
     if (cur_val < min_val) min_val = cur_val;
   }
   //LL << "max "<<max_val  << " min " <<min_val;
 
-  int histNum = 20;
-  int hist[20];
+  int histNum = 100;
+  int hist[100];
   float ratio = 1.0/histNum;
-  //LL << "ratio " <<ratio;
-  
-  //memset(hist, 0, histNum*sizeof(int));
   for (int i=0; i < histNum; i++) hist[i] = 0;
 
-  //LL << "setup histogram";
-  int ave = (int) std::floor(value.size()*ratio);
-  //LL << "ave " << ave;
+  //int ave = (int) std::floor(value.size()*ratio);
 
-  V r = 1/(max_val-min_val+1e-10);
-  LL << "range "<< r;
+  V r = (1-1e-10)/(max_val-min_val);
   for (int i=0; i < value.size(); ++i) {
-    hist[(int) std::floor((value[i]-min_val)*r*histNum)] += 1;
+    hist[(int) ((value[i]-min_val)*r*histNum)] += 1;
   }
 
+  /*
   for (int i = 0; i<histNum; ++i) {
     if(hist[i]>0) LL << i << " histNum:" << hist[i];
-  }
+  }*/
 
   int acc = 0;
   for (int i = histNum-1; i>=0; i--) {
     acc += hist[i];
-    if (acc > K-ave) { 
+    if (acc > K) { 
       return static_cast<V>((i+0.5)*ratio/r+min_val);
     }
   }
