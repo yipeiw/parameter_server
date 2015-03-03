@@ -1,84 +1,82 @@
 #pragma once
-#include "filter/sparse_filter.h"
 #include "filter/weight_sensitive_sample.h"
-#include "linear_method/linear_method.pb.h"
-
-#include <random>
+#include "filter/filter.h"
 #include "math.h"
+#include <random>
 
 namespace PS{
 
-class SampleFilter : public SparseFilter{
+class SampleFilter{
  public:
-  void init(LM::SampleFilterConfig& sample_conf) {
-      //setThreshold(sample_conf.threshold());
-      setPercent(sample_conf.percent());
+  SampleFilter() {
+    //LL << "generate randomlist";
+    random_real_list = new double[RandomLen];
+    std::random_device rd;
+    std::uniform_real_distribution<float> distribution(0,1);
+    for (int i=0; i<RandomLen; i++) {
+      random_real_list[i] = 1.0/distribution(rd);
+    }
+    //LL << "finish generation";
+  }
+  ~SampleFilter() {
+    delete[] random_real_list;
   }
 
-  template <typename V> 
-  void sample(SArray<V>& value, int leftIdx, int rightIdx) {
-      //threshold cut method, other sampling need to be added
-      if (setPercentTag){
-          expected_num_=round( (rightIdx-leftIdx)*expect_percent_);
-          setNumTag = true;  
-      } 
-      if (setNumTag) {
-          sampleThresholdCut(value, leftIdx, rightIdx, expected_num_);
-      } else {
-          LL << "sample percent not given";
-      }  
-}
+  bool marked(float v) {return v!=v;}
+  bool marked(double v) {return v!=v;}
+ 
+  template<typename V>
+  void PrioritySample(SArray<V>& value, float samplePercent) {
+    //LL << "start prepare data";
+    int count = 0;
+    SArray<V> priority_arr(value.size(), 0.0);
+    SArray<V> sort_arr(value.size(),0.0);
+    for(int i=0; i < value.size(); i++) {
+      V val = value[i];
+      if (marked(val) || val==0) continue;
+      priority_arr[i] = fabs(val)*random_real_list[used % RandomLen];
+      sort_arr[i] = priority_arr[i];
+      count++;
+      used++;
+    }
+    //LL<<"data copied";
+    used = used % RandomLen;
+    
+    if (count < 2) {LL<<"effective "<<count<<",no need to sample"; return;}
 
-  void setPercent(float p) {expect_percent_ = p; setPercentTag = true;}
-  double getPercent() { return expect_percent_; }
-
-  void setSampleNum(int num) { expected_num_ = num; setNumTag = true;}
-  void setThreshold(double p) {threshold_ = p; }
-  double getThreshold() {return threshold_;}
-
-  template<typename T> void apply(SArray<T> Val) {
-      //Random(Val);
-      int K = std::floor(expect_percent_*Val.size());
-      //LL << "sample " << expect_percent_ << ",num "<<K << " of "<<Val.size();
-      WeightSensitiveSample(Val, K);
-      /*std::default_random_engine generator;
-      std::uniform_real_distribution<float> distribution(0.0, 1.0);
-      auto randNum = distribution(generator);
-
-      double val = fabs(v);
-      if (val/randNum > threshold_) {
-        int sign = v>0? 1:-1;
-        v = sign*std::max(val, threshold_);
-      } else {
-        v = 0;
-      }*/
-  }
-
-  template<typename T> void Random(SArray<T> Val) {
-   for (int i=0; i< Val.size(); i++) {
-     unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-     std::default_random_engine generator(seed);
-     std::uniform_real_distribution<float> distribution(0.0, 1.0);
-     auto randNum = distribution(generator);
-     if (randNum >= expect_percent_) Val[i]=0;
-   }
-  }
-
-  void updateParam(int iter, double refer_val) {
-      double ratio = 0.8;
-      if (iter==0) {
-        threshold_ = ratio*refer_val;
-      } else {
-        threshold_ = std::min(ratio*threshold_/(iter*iter), refer_val);
+    int K = count*samplePercent;
+    LL << "priority sampleFilter "<< K << " from "<<count<<" of "<<value.size();
+    
+    if (K==0) {
+      for(int i=0; i<value.size(); i++) {
+        if (marked(value[i]) || value[i]==0) continue;
+        value[i]=0;
       }
+      return;
+    }
+
+    auto threshold = findKthLargest(sort_arr, 0, count-1, K+1);
+    LL << "threshold:" << threshold;
+
+    sort_arr.clear();
+
+    for(int i=0; i < priority_arr.size(); i++) {
+      if (priority_arr[i]==0) {continue;} //include value[i]=0 or nan
+      if (priority_arr[i]<=threshold) {
+        value[i]=0;
+      } else {
+        V val = value[i];
+        int sgn=val>0?1:-1;
+        value[i] = fabs(val)>threshold ? val:sgn*threshold;
+      }
+    }
+    priority_arr.clear();
   }
 
  private:
-  int expected_num_;
-  bool setNumTag=false;
-  float expect_percent_;
-  bool setPercentTag = false;
-  double threshold_ = 0.0;
+  double* random_real_list = nullptr;
+  int RandomLen = 10000;
+  int used = 0;
 };
 
 }
