@@ -9,11 +9,10 @@ void LrL2Server::preprocessData(const MessagePtr& msg) {
     delta_[grp].resize(n, conf_.lrl2().delta_init_value());
     //active_set_[grp].resize(n, true);
   }
-  /*
-  if (conf_.lrl2().has_kkt_filter()) {
-    using_kkt_filter_ = true;
-    kkt_filter_.init(model_, fea_grp_);
-  }*/
+  
+  if (conf_.lrl2().has_sample_filter()) {
+    using_sample_filter_ = true;
+  }
   //LL << "server kkt " << using_kkt_filter_;
 
   if (conf_.lrl2().has_round_filter() ) {
@@ -21,7 +20,6 @@ void LrL2Server::preprocessData(const MessagePtr& msg) {
     auto round_conf = conf_.lrl2().round_filter();
     randomround_filter_.init(round_conf);
   }
-  //LL << "server round:" << using_round_filter_;
 }
 
 void LrL2Server::updateWeight(const MessagePtr& msg) {
@@ -32,10 +30,11 @@ void LrL2Server::updateWeight(const MessagePtr& msg) {
   if (cmd.has_roundfilter_bit_num()) {
     randomround_filter_.set_bit(cmd.roundfilter_bit_num()); 
   }
+  
+  if (cmd.has_sample_percent()) {
+      sample_filter_.setPercent(cmd.sample_percent());
+  }
 
-  /*if (cmd.has_sample_filter_percent()) {
-     sample_filter_.setPercent(cmd.sample_filter_percent()); 
-  }*/
   /*if (cmd.has_kkt_filter_threshold()) {
     kkt_filter_.set_threshold(cmd.kkt_filter_threshold());
     kkt_filter_.violation_ = 0;
@@ -62,8 +61,21 @@ void LrL2Server::updateWeight(const MessagePtr& msg) {
     CHECK_EQ(col_range, data.first);
     CHECK_EQ(data.second.size(), 1);
 
+    SArray<double> D(data.second[0].size(), 0);
+
     sys_.hb().startTimer(HeartbeatInfo::TimerType::BUSY);
-    updateWeight(grp, col_range, data.second[0]);
+    if (using_round_filter_){
+      randomround_filter_.decode(data.second[0], D);
+    } else {
+      D = data.second[0];
+    }
+    //if (using_sample_filter_) sample_filter_.apply(D);
+    updateWeight(grp, col_range, D);
+    /*for (int i=0; i<col_range.size(); i++) {
+      auto D = data.second[0];    
+      if (D[i+col_range.begin()]!=0) { ++nzz; }
+    }*/
+
     sys_.hb().stopTimer(HeartbeatInfo::TimerType::BUSY);
   }
 
@@ -91,17 +103,22 @@ void LrL2Server::updateWeight(
     delta[k] = newDelta(delta_max, d);
     w += d;
 
-    max_delta_ = std::max(delta[k], max_delta_);
+    max_delta_ = std::max(fabs(delta[k]), max_delta_);
 
-    if (w!= 0 && using_round_filter_) {
+    /*if (w!= 0 && using_round_filter_) {
       w = randomround_filter_.randomizedRound(w);
-    } 
+    }
+    if (w!=0 && using_sample_filter_) {
+      sample_filter_.apply(w);
+    }*/
+ 
   }
 
   //sample_filter_.sample(value, range.begin(), range.end());
 }
 
 void LrL2Server::evaluateProgress(Progress* prog) {
+  nzz=0;
   size_t nnz_w = 0;
   //size_t nnz_as = 0;
   double objv = 0;
@@ -114,7 +131,6 @@ void LrL2Server::evaluateProgress(Progress* prog) {
       ++ nnz_w;
       objv += w*w;
     }
-    //if (using_kkt_filter_) nnz_as += kkt_filter_.get_nnz(grp);
   }
   prog->add_objv(objv * conf_.penalty().lambda(0));
   prog->set_nnz_w(nnz_w);

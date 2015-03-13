@@ -113,7 +113,7 @@ message KKTFilterConfig {
 
 message SampleFilterConfig {
   optional float percent = 1;
-  required double threshold = 2 [default = 0.0];
+  optional double threshold = 2 [default = 0.0];
 }
 
 message SmoothConfig {
@@ -192,6 +192,7 @@ message Call {
   optional int32 roundfilter_bit_num = 6;
 
   optional double sample_threshold = 7;
+  optional double sample_percent = 10;
 
   repeated int32 fea_grp = 8;
   optional bool hit_cache = 9;

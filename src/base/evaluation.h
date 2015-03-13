@@ -10,8 +10,7 @@ template <typename V>
 class Evaluation {
  public:
   static V auc(const SArray<V>& label, const SArray<V>& predict);
-
-
+  static V acc(const SArray<V>& label, const SArray<V>& Xw);
 };
 
 template <typename V>
@@ -42,5 +41,16 @@ V Evaluation<V>::auc(const SArray<V>& label, const SArray<V>& predict) {
   area /= cum_tp * (n - cum_tp);
   return area < 0.5 ? 1 - area : area;
 }
+
+template <typename V>
+V Evaluation<V>::acc(const SArray<V>& label, const SArray<V>& Xw) {
+  int correctNum = 0;
+  for(int i=0; i< label.size(); i++) {
+    double predict_lb = 1.0/(1+exp(-Xw[i])) > 1.0/(1+exp(Xw[i])) ? 1:-1;
+    if (predict_lb*label[i]>0) correctNum++;
+  }
+  return static_cast<V>(correctNum)/label.size();
+}
+
 
 } // namespace PS

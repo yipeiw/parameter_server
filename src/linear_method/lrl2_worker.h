@@ -18,7 +18,7 @@ class LrL2Worker : public BatchWorker, public LrL2Common {
   void updateDual(int grp, SizeR col_range, SArray<double> new_weight);
   void updateDual(int grp, SizeR row_range, SizeR col_range, SArray<double> w_delta);
 };
-  
+  //int addZero;  
   //std::unordered_map<int, SArray<double>> NW_;
 } // namespace LM
 } // namespace PS

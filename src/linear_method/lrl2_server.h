@@ -16,6 +16,7 @@ class LrL2Server : public BatchServer, public LrL2Common {
   double max_lr_ = 0.0;
   double min_lr_ = 1.0;
   double max_delta_ = 0.0;
+  int nzz = 0;
   //double kkt_filter_threshold_;
   //double violation_;
 };

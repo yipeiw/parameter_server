@@ -13,9 +13,9 @@
 #include "linear_method/lrl1_server.h"
 #include "linear_method/lrl1_scheduler.h"
 
-#include "linear_method/countlrl1_worker.h"
-#include "linear_method/countlrl1_server.h"
-#include "linear_method/countlrl1_scheduler.h"
+//#include "linear_method/countlrl1_worker.h"
+//#include "linear_method/countlrl1_server.h"
+//#include "linear_method/countlrl1_scheduler.h"
 
 #include "linear_method/darlin_worker.h"
 #include "linear_method/darlin_server.h"
@@ -56,7 +56,7 @@ AppPtr LinearMethod::create(const Config& conf) {
       } else if (my_role == Node::SERVER) {
         return AppPtr(new LrL1Server());
       }
-    } else if (conf.has_countlrl1()) {
+    } /*else if (conf.has_countlrl1()) {
       if (my_role == Node::SCHEDULER) {
         return AppPtr(new CountLrL1Scheduler());
       } else if (my_role == Node::WORKER) {
@@ -64,7 +64,7 @@ AppPtr LinearMethod::create(const Config& conf) {
       } else if (my_role == Node::SERVER) {
         return AppPtr(new CountLrL1Server());
       }
-    } else if (conf.has_lrl2()) {
+    } */else if (conf.has_lrl2()) {
       //passing update direclty
       if (my_role == Node::SCHEDULER) {
         return AppPtr(new LrL2Scheduler());

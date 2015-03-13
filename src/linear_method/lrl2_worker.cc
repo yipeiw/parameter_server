@@ -14,9 +14,12 @@ void LrL2Worker::preprocessData(const MessagePtr& msg) {
   }
   for (int grp : fea_grp_) {
     size_t n = model_->key(grp).size();
+    LL << "grp:" << grp << ", " <<n;
     //active_set_[grp].resize(n, true);
     delta_[grp].resize(n, conf_.lrl2().delta_init_value());
     NW_[grp].resize(n, 0.0);
+    U_[grp].resize(n, 0.0);
+    G_[grp].resize(n, 0.0);
   }
   
   if (conf_.lrl2().has_sample_filter()) {
@@ -30,7 +33,6 @@ void LrL2Worker::preprocessData(const MessagePtr& msg) {
     randomround_filter_.init(round_conf);
   }
 
-  //randomround_filter_.set_bit(32);
 }
 
 void LrL2Worker::computeGradient(const MessagePtr& msg) {
@@ -41,8 +43,8 @@ void LrL2Worker::computeGradient(const MessagePtr& msg) {
     randomround_filter_.set_bit(cmd.roundfilter_bit_num());
   }
 
-  if (cmd.has_sample_threshold()) {
-      sample_filter_.setThreshold(cmd.sample_threshold());
+  if (cmd.has_sample_percent()) {
+      sample_filter_.setPercent(cmd.sample_percent());
   }
   /*if (cmd.reset_kkt_filter()) {
     kkt_filter_.reset(fea_grp_);
@@ -93,6 +95,7 @@ void LrL2Worker::pullAndUpdateDual(
 void LrL2Worker::computeAndPushGradient(
     int time, Range<Key> g_key_range, int grp, SizeR col_range) {
   SArray<double> D(col_range.size(), 0);
+  SArray<int16_t> Round_D(col_range.size(), 0);
 
   mu_.lock();  // lock the dual_
   sys_.hb().startTimer(HeartbeatInfo::TimerType::BUSY);
@@ -109,8 +112,16 @@ void LrL2Worker::computeAndPushGradient(
       auto thr_range = col_range.evenDivide(npart, i);
       if (thr_range.empty()) continue;
       auto gr = thr_range - col_range.begin();
-      pool.add([this, grp, thr_range, gr, &D]() {
+      pool.add([this, grp, thr_range, gr, &D, &Round_D]() {
           computeGradient(grp, thr_range, D.segment(gr));
+	  if (using_sample_filter_) {
+            //LL << "start sample";
+            sample_filter_.apply(D.segment(gr));
+          }
+
+	  if (using_round_filter_) {
+            randomround_filter_.apply(D.segment(gr), Round_D.segment(gr));
+	  }
         });
     }
     pool.startWorkers();
@@ -122,7 +133,24 @@ void LrL2Worker::computeAndPushGradient(
   // push the gradient into servers
   MessagePtr push(new Message(kServerGroup, time));
   push->setKey(model_->key(grp).segment(col_range));
-  push->addValue({D});
+
+  for (int i=0; i < D.size(); i++) {
+      if(D[i]!=0) nzNum++;
+  }
+
+  if (using_round_filter_) {
+    //temporaroly passing double value of the int
+    SArray<double >RD(D.size(),0);
+    for (int i=0; i < Round_D.size(); i++) {
+      RD[i] = (double) Round_D[i];
+      if (D[i]!=0 && RD[i]==0) addZero++;
+    }
+    push->addValue({RD});
+    //if (addZero>0) LL <<"push add zero "<< addZero;
+  } else {
+    push->addValue({D});
+  }
+
   g_key_range.to(push->task.mutable_key_range());
   push->task.set_key_channel(grp);
   push->addFilter(FilterConfig::KEY_CACHING);
@@ -173,15 +201,18 @@ void LrL2Worker::computeGradient(
     }
     g += 2 * lambda * NW[k];
     u += 2; 
+
+    U_[grp][k] = u;
+    G_[grp][k] = g;
+
     double update = - g / u;
     D[j] = update;
-    if (using_round_filter_) {
+    /*if (using_round_filter_) {
       D[j] = randomround_filter_.randomizedRound(update);
     } else if (using_sample_filter_) {
       sample_filter_.apply(D[j]);
-    }
+    }*/
 
-    //sample_filter_.sample(G, 0, X->cols());
   }
 }
 
@@ -271,6 +302,15 @@ void LrL2Worker::evaluateProgress(Progress* prog) {
   mu_.unlock();
   prog->add_busy_time(busy_timer_.stop());
   busy_timer_.restart();
+
+  LL << "eval on worker";
+  //LL << "push nnz:" << nzNum <<",add zeros:" <<addZero;
+  //addZero = 0;
+  //nzNum = 0;
+  for(int i=0; i<5; i++) {
+    int k = i*2500+12;
+    LL << k << " u:" <<U_[1][k] << ", g:"<<G_[1][k];
+  }
 
   // double mean = 0;
   // double* y = y_->value().data();

@@ -14,6 +14,9 @@ class LrL1Common {
   }
  protected:
   //std::unordered_map<int, Bitmap> active_set_;
+  std::unordered_map<int, SArray<double>> U_;
+  std::unordered_map<int, SArray<double>> G_;
+  std::unordered_map<int, SArray<double>> NW_;
   std::unordered_map<int, SArray<double>> delta_;
   KKTFilter kkt_filter_;
   RoundingFilter randomround_filter_;

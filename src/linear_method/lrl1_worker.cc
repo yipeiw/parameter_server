@@ -15,6 +15,9 @@ void LrL1Worker::preprocessData(const MessagePtr& msg) {
   for (int grp : fea_grp_) {
     size_t n = model_->key(grp).size();
     //active_set_[grp].resize(n, true);
+    NW_[grp].resize(n, 0.0);
+    G_[grp].resize(n, 0.0);
+    U_[grp].resize(n, 0.0);
     delta_[grp].resize(n, conf_.lrl1().delta_init_value());
   }
   if (conf_.lrl1().has_kkt_filter()) {
@@ -177,13 +180,26 @@ void LrL1Worker::computeGradient(
         // u += tau * (1-tau) * v * v;
       }
     }
-    
+    /*u = u + 1e-10;
+    double lambda = conf_.penalty().lambda(0)/4.0;
+    double g_pos = g + lambda, g_neg = g - lambda;
+    double w = NW_[grp][k];
+    double dd = -w;
+    if (g_pos <= u * w) {
+      dd = - g_pos / u;
+    } else if (g_neg >= u * w) {
+      dd = - g_neg / u;
+    }*/
+     
     if (using_round_filter_) {
       G[j] = randomround_filter_.randomizedRound(g);
       U[j] = randomround_filter_.randomizedRound(u);
     } else {
       G[j] = g; U[j] = u;
     }
+
+    U_[grp][k] = u;
+    G_[grp][k] = g;
 
     //sample_filter_.sample(G, 0, X->cols());
   }
@@ -209,6 +225,8 @@ void LrL1Worker::updateDual(int grp, SizeR col_range, SArray<double> new_w) {
     delta_w[i] = nw - cw;
     delta[j] = newDelta(delta_max, delta_w[i]);
     cw = nw;
+
+    NW_[grp][j] = nw;
   }
 
   CHECK(X_[grp]);
@@ -274,6 +292,12 @@ void LrL1Worker::evaluateProgress(Progress* prog) {
   prog->add_busy_time(busy_timer_.stop());
   busy_timer_.restart();
 
+  LL << "eval on worker";
+  for(int i=0; i<8; i++) {
+    int k = i*2500+12;
+    LL << k << " u:" <<U_[1][k] << ", g:"<<G_[1][k];
+  }
+  //
   // double mean = 0;
   // double* y = y_->value().data();
   // for (int i = 0; i < dual_.size(); ++i) {

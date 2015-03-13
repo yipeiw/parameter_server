@@ -2,6 +2,9 @@
 #include "util/split.h"
 #include "learner/bcd.h"
 #include "util/bitmap.h"
+#include "filter/sparse_filter.h"
+#include "filter/sample_filter.h"
+#include "filter/util.h"
 #include "app/linear_method/linear.h"
 
 namespace PS {
@@ -176,6 +179,7 @@ class DarlinServer : public BCDServer<Real>, DarlinCommon, LinearMethod {
       active_set_[grp].resize(n, true);
       delta_[grp].resize(n, bcd_conf_.GetExtension(delta_init_value));
     }
+    sample_filter_ = new SampleFilter();
   }
   virtual void updateModel(int time, const BCDCall& call) {
     if (call.has_kkt_filter_threshold()) {
@@ -203,6 +207,13 @@ class DarlinServer : public BCDServer<Real>, DarlinCommon, LinearMethod {
       CHECK_EQ(data.second.size(), 2);
 
       updateWeight(grp, col_range, data.second[0], data.second[1]);
+      int nnzOrigin = NNZVector(model_.value(grp));
+      float samplePercent = bcd_conf_.GetExtension(w_sample_percent);
+      if (samplePercent>0) {
+        sample_filter_->PrioritySample(model_.value(grp), samplePercent);
+	int nnzCount = NNZVector(model_.value(grp));
+        //LL << "w add Zero "<<nnzCount-nnzOrigin <<" of "<<model_.value(grp).size();
+      }
     }
 
     model_.finish(kWorkerGroup, time+1);
@@ -375,16 +386,20 @@ class DarlinWorker : public BCDWorker<Real>, DarlinCommon, LinearMethod {
     mu_.unlock();  // lock the dual_
 
     int nnzOrigin = NNZVector(G);
+    int nnzU = NNZVector(U);
+    LL << "sparsity U:"<<nnzU<<" G:"<<nnzOrigin;
+    int bitsU = Sparse(U);
+    int bitsG = Sparse(G);
+    LL << "bit one U "<<bitsU<<" G "<<bitsG;
+
     float samplePercent = bcd_conf_.GetExtension(sample_percent);
     if (samplePercent>0) {
-      //int sampleNum = (int) float(G.size())*samplePercent;
-      //LL << "priority sampleFilter "<< sampleNum << " from "<<G.size();
       sample_filter_->PrioritySample(G, samplePercent);
       int nnzCount = NNZVector(G);
       LL << "add Zero "<<nnzCount-nnzOrigin <<" of "<<G.size();
-    } else { 
+    }/* else { 
       LL << "origin sparsity " << nnzOrigin << " of " <<G.size();
-    }
+    }*/
 
     // push the gradient into servers
     MessagePtr push(new Message(kServerGroup, time));
@@ -393,12 +408,21 @@ class DarlinWorker : public BCDWorker<Real>, DarlinCommon, LinearMethod {
     g_key_range.to(push->task.mutable_key_range());
     push->task.set_key_channel(grp);
     push->addFilter(FilterConfig::KEY_CACHING);
-    int nbytes = bcd_conf_.GetExtension(fixing_float_by_nbytes);
-    if (nbytes) {
-      //LL << "add round " << nbytes;
 
-      auto conf = push->addFilter(FilterConfig::FIXING_FLOAT)->add_fixed_point();
-      conf->set_num_bytes(nbytes);
+    int nFilter = bcd_conf_.ExtensionSize(fixing_float_by_nbytes);
+    if (nFilter>0) {
+      FilterConfig* qfilter = push->addFilter(FilterConfig::FIXING_FLOAT);
+      for (int n=0; n < nFilter; n++) {
+        int nbytes = bcd_conf_.GetExtension(fixing_float_by_nbytes, n);
+        LL <<n<< " add quantization " << nbytes;
+        auto conf = qfilter->add_fixed_point(); 
+        conf->set_num_bytes(nbytes);
+        double maxV1=0, minV1=0;
+        if(FindExtreme(G, &maxV1, &minV1)) {
+          conf->set_max_value(maxV1);
+          conf->set_min_value(minV1);
+        } else { conf->set_rescale(false);}
+      }
     }
 
     CHECK_EQ(time, model_.push(push));

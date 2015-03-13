@@ -25,6 +25,7 @@ void LrL2Scheduler::init() {
     auto sample_conf = conf_.lrl2().sample_filter();
     sample_filter_.init(sample_conf);
   }
+  LL << "use sample filter " << using_sample_filter_;
 }
 
 
@@ -74,7 +75,7 @@ void LrL2Scheduler::runIteration() {
       }
 
       if (using_sample_filter_ && i ==0 ) {
-        cmd->set_sample_threshold(sample_filter_.getThreshold());
+        cmd->set_sample_percent(sample_filter_.getPercent());
       }
 
       // kkt filter
@@ -103,6 +104,7 @@ void LrL2Scheduler::runIteration() {
       time = pool->submit(update);
     }
 
+    LL << "evaluate " << iter;
     // evaluate the progress
     Task eval = newTask(Call::EVALUATE_PROGRESS);
     if (time - tau >= first_time) {
@@ -116,9 +118,9 @@ void LrL2Scheduler::runIteration() {
         randomround_filter_.updateParam(iter);
     }
 
-    if (using_sample_filter_) {
+    /*if (using_sample_filter_) {
 	sample_filter_.updateParam(iter, g_progress_[iter].delta_minimax());
-    }
+    }*/
 
    /*
    if (using_kkt_filter_) {

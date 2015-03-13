@@ -66,6 +66,7 @@ void ModelEvaluation::run() {
   // label.writeToFile("L");
   // predict.writeToFile("P");
   LI << "auc: " << Evaluation<Real>::auc(label, predict);
+  LI << "acc: " << Evaluation<Real>::acc(label, predict);
 }
 
 } // namespace LM
